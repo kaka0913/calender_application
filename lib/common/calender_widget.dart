@@ -61,18 +61,38 @@ class _DateBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            color: weekday == 6
-                ? Colors.blue
-                : weekday == 7
-                    ? Colors.red
-                    : Colors.black,
-          ),
+    final today = DateTime.now();
+    final isToday = today.day == int.tryParse(label);
+
+    return GestureDetector(
+      onTap: () {
+        // ボタンが押されたときの処理をここに書く
+      },
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: weekday == 6
+                    ? Colors.blue
+                    : weekday == 7
+                        ? Colors.red
+                        : Colors.black,
+              ),
+            ),
+            if (isToday)
+              Container(
+                width: 7,
+                height: 7,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                ),
+              ),
+          ],
         ),
       ),
     );
