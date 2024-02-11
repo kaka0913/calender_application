@@ -63,16 +63,16 @@ class _DateBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(
-          color: weekday == 6
-              ? Colors.blue.shade50
-              : weekday == 7
-                  ? Colors.red.shade50
-                  : Colors.white,
-        ),
-        child: Center(
-          child: Text(label),
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            color: weekday == 6
+                ? Colors.blue
+                : weekday == 7
+                    ? Colors.red
+                    : Colors.black,
+          ),
         ),
       ),
     );

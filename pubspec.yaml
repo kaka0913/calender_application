@@ -11,6 +11,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   import_sorter: ^4.6.0
   very_good_analysis: ^5.1.0
+  flutter_hooks: ^0.20.5
+  month_picker_dialog: ^2.6.0
+  flutter_datetime_picker_plus: ^2.1.0
 
 dev_dependencies:
   flutter_test:
