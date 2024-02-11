@@ -1,5 +1,5 @@
 // Flutter imports:
-import 'package:calender_application/view/calender_view.dart';
+import 'package:calender_application/view/calender_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
