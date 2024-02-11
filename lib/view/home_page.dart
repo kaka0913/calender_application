@@ -32,14 +32,6 @@ class HomePage extends HookWidget {
       setDate.value = DateTime.now();
     }
 
-    void toNextMonth() {
-      setDate.value = DateTime(setDate.value.year, setDate.value.month + 1);
-    }
-
-    void toPreviousMonth() {
-      setDate.value = DateTime(setDate.value.year, setDate.value.month - 1);
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -61,7 +53,20 @@ class HomePage extends HookWidget {
                 onNextTap: onNextTap,
                 toCurrentMonth: toCurrentMonth,
               ),
-              Calendar(date: setDate.value),
+              Expanded(
+                child: PageView.builder(
+                  itemCount: 100,
+                  controller:
+                      PageController(initialPage: setDate.value.month - 1),
+                  onPageChanged: (value) {
+                    setDate.value = DateTime(setDate.value.year, value + 1);
+                  },
+                  itemBuilder: (context, index) {
+                    return Calendar(
+                        date: DateTime(setDate.value.year, index + 1),);
+                  },
+                ),
+              ),
             ],
           ),
         ),
