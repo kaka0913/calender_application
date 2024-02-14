@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 // Project imports:
-import 'package:calender_application/common/week_row.dart';
+import 'package:calender_application/common/calender_week_row.dart';
 import 'package:calender_application/model/calender_model.dart';
 
 class Calendar extends HookWidget {

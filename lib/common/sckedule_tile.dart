@@ -2,9 +2,9 @@ import 'package:calender_application/repository/drift_repository.dart';
 import 'package:flutter/material.dart';
 
 
-class ScheduleDetail extends StatelessWidget {
+class ScheduleTile extends StatelessWidget {
 
-  const ScheduleDetail({required this.schedule, super.key});
+  const ScheduleTile({required this.schedule, super.key});
 
   final Schedule schedule;
 
