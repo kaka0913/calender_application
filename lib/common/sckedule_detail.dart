@@ -10,39 +10,50 @@ class ScheduleDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Column(
-          children: [
-                Text(
-  '${schedule.startTime.hour.toString().padLeft(2, '0')}:${schedule.startTime.minute.toString().padLeft(2, '0')}', 
-  style: const TextStyle(fontSize: 10),
-),
-Text(
-  '${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}', 
-  style: const TextStyle(fontSize: 10),
-)
-          ],         
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Column(
+              children: [
+                    Text(
+          '${schedule.startTime.hour.toString().padLeft(2, '0')}:${schedule.startTime.minute.toString().padLeft(2, '0')}', 
+          style: const TextStyle(fontSize: 10),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8),
-          child: Container(
-            width:5, // 線の幅を指定
-            height: 30,
-            decoration: const BoxDecoration(
-              color: Colors.blue, // 線の色を指定
+        Text(
+          '${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}', 
+          style: const TextStyle(fontSize: 10),
+        )
+              ],         
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Container(
+                width:5, 
+                height: 30,
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+        Expanded(
+          child: Text(
+        'タイトル: ${schedule.title}', 
+        style: const TextStyle(fontSize: 15),
+        overflow: TextOverflow.ellipsis, 
+        maxLines: 1, 
           ),
         ),
-Expanded(
-  child: Text(
-    'タイトル: ${schedule.title}', 
-    style: const TextStyle(fontSize: 15),
-    overflow: TextOverflow.ellipsis, // テキストがはみ出た場合に3点リーダーを表示
-    maxLines: 1, 
-  ),
-),
+          ],
+        ),
+        const Divider(
+          color: Color.fromARGB(255, 214, 206, 206),
+          height: 20,
+          thickness: 1,
+          indent: 1,
+          endIndent: 1,
+        ),
       ],
     );
   }
