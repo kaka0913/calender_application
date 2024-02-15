@@ -1,22 +1,26 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
-import 'package:flutter/material.dart';
 
 class ScheduleDialog extends StatelessWidget {
   const ScheduleDialog({
     required this.schedule,
-    Key? key}) : super(key: key);
+    super.key,
+  });
 
-    final Schedule schedule;
+  final Schedule schedule;
 
   @override
   Widget build(BuildContext context) {
-    final id = 1;
-    final title = 'テストタイトルたいとるたいとる';
+    const id = 1;
+    const title = 'テストタイトルたいとるたいとる';
     final day = DateTime.now();
     final startTime = DateTime.now();
-    final endTime = DateTime.now().add(Duration(hours: 1));
-    final isAllDay = false;
+    final endTime = DateTime.now().add(const Duration(hours: 1));
+    const isAllDay = false;
 
     final schedule = Schedule(
       id: id,
@@ -64,7 +68,7 @@ class ScheduleDialog extends StatelessWidget {
               thickness: 1,
               indent: 1,
               endIndent: 1,
-            )
+            ),
           ],
         ),
         content: ScheduleTile(schedule: schedule),

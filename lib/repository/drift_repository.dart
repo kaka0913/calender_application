@@ -1,7 +1,9 @@
-import 'dart:io'; 
-import 'package:drift/native.dart';  
-import 'package:path/path.dart' as p; 
-import 'package:path_provider/path_provider.dart';  
+import 'dart:io';
+import 'package:drift/native.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+// Package imports:
 import 'package:drift/drift.dart';
 
 part 'drift_repository.g.dart';
@@ -17,16 +19,16 @@ class Schedules extends Table {
 
 @DriftDatabase(tables: [Schedules])
 class SckeduleDatabase extends _$SckeduleDatabase {
-  SckeduleDatabase() : super(_openConnection());  
+  SckeduleDatabase() : super(_openConnection());
 
-  @override  
+  @override
   int get schemaVersion => 1;
 }
 
-  LazyDatabase _openConnection() {
-    return LazyDatabase(() async {
-      final dbFolder = await getApplicationDocumentsDirectory();
-      final file = File(p.join(dbFolder.path, 'db.sqlite'));
-      return NativeDatabase(file);
-    });
-  }
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, 'db.sqlite'));
+    return NativeDatabase(file);
+  });
+}

@@ -1,9 +1,10 @@
-import 'package:calender_application/repository/drift_repository.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
+import 'package:calender_application/repository/drift_repository.dart';
 
 class ScheduleTile extends StatelessWidget {
-
   const ScheduleTile({required this.schedule, super.key});
 
   final Schedule schedule;
@@ -17,34 +18,36 @@ class ScheduleTile extends StatelessWidget {
           children: <Widget>[
             Column(
               children: [
-                    Text(
-          '${schedule.startTime.hour.toString().padLeft(2, '0')}:${schedule.startTime.minute.toString().padLeft(2, '0')}', 
-          style: const TextStyle(fontSize: 10),
-        ),
-        Text(
-          '${schedule.endTime.hour.toString().padLeft(2, '0')}:${schedule.endTime.minute.toString().padLeft(2, '0')}', 
-          style: const TextStyle(fontSize: 10),
-        )
-              ],         
+                Text(
+                  '${schedule.startTime.hour.toString().padLeft(2, '0')}:${
+                    schedule.startTime.minute.toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontSize: 10),
+                ),
+                Text(
+                  '${schedule.endTime.hour.toString().padLeft(2, '0')}:${
+                    schedule.endTime.minute.toString().padLeft(2, '0')}',
+                  style: const TextStyle(fontSize: 10),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8, right: 8),
               child: Container(
-                width:5, 
+                width: 5,
                 height: 30,
                 decoration: const BoxDecoration(
                   color: Colors.blue,
                 ),
               ),
             ),
-        Expanded(
-          child: Text(
-        'タイトル: ${schedule.title}', 
-        style: const TextStyle(fontSize: 15),
-        overflow: TextOverflow.ellipsis, 
-        maxLines: 1, 
-          ),
-        ),
+            Expanded(
+              child: Text(
+                'タイトル: ${schedule.title}',
+                style: const TextStyle(fontSize: 15),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
         const Divider(
