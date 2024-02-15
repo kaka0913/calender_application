@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:calender_application/common/calender_date_box.dart';
-import 'package:calender_application/common/schedule_dialog.dart';
+import 'package:calender_application/common/schedule_carousel.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 
 class WeekRow extends ConsumerWidget {
@@ -77,7 +77,7 @@ class WeekRow extends ConsumerWidget {
                           horizontal: 8,
                           vertical: 100,
                         ),
-                        child: ScheduleDialog(schedule: scheduleExample),
+                        child: ScheduleCarousel(schedule: scheduleExample),
                       );
                     },
                   );

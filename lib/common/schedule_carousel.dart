@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 
-class ScheduleDialog extends StatelessWidget {
-  const ScheduleDialog({
+class ScheduleCarousel extends StatelessWidget {
+  const ScheduleCarousel({
     required this.schedule,
     super.key,
   });
