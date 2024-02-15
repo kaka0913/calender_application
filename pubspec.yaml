@@ -21,6 +21,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.20
   drift_dev: ^1.7.1
   intl: ^0.18.1
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:
