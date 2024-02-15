@@ -1,12 +1,12 @@
 // Flutter imports:
-import 'package:calender_application/common/calender_date_box.dart';
-import 'package:calender_application/common/schedule_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
+import 'package:calender_application/common/calender_date_box.dart';
+import 'package:calender_application/common/schedule_dialog.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 
 class WeekRow extends ConsumerWidget {
@@ -30,12 +30,12 @@ class WeekRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     //テストデータ
 
-    final id = 1;
-    final title = 'テストタイトルたいとるたいとる';
+    const id = 1;
+    const title = 'テストタイトルたいとるたいとる';
     final day = DateTime.now();
     final startTime = DateTime.now();
-    final endTime = DateTime.now().add(Duration(hours: 1));
-    final isAllDay = false;
+    final endTime = DateTime.now().add(const Duration(hours: 1));
+    const isAllDay = false;
 
     final scheduleExample = Schedule(
       id: id,
@@ -58,12 +58,31 @@ class WeekRow extends ConsumerWidget {
             isSelected: selectedDate?.day == int.tryParse(datesOfWeek[index]),
             onDateSelected: () {
               final selectedDay = int.parse(datesOfWeek[index]);
-                showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return ScheduleDialog(schedule: scheduleExample);
-    },
-  );
+              showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return PageView.builder(
+                    controller: PageController(
+                      viewportFraction: 0.9,
+                      initialPage: 1, //初期表示ページ
+                    ),
+                    itemCount: 3,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                        ),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 100,
+                        ),
+                        child: ScheduleDialog(schedule: scheduleExample),
+                      );
+                    },
+                  );
+                },
+              );
               if (selectedDate?.day == selectedDay) {
                 onDateSelected(null);
               } else {
