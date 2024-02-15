@@ -1,10 +1,11 @@
+// Dart imports:
 import 'dart:io';
-import 'package:drift/native.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 // Package imports:
 import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 part 'drift_repository.g.dart';
 

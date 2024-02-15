@@ -61,7 +61,26 @@ class WeekRow extends ConsumerWidget {
               showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {
-                  return ScheduleDialog(schedule: scheduleExample);
+                  return PageView.builder(
+                    controller: PageController(
+                      viewportFraction: 0.9,
+                      initialPage: 1, //初期表示ページ
+                    ),
+                    itemCount: 3,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                        ),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 100,
+                        ),
+                        child: ScheduleDialog(schedule: scheduleExample),
+                      );
+                    },
+                  );
                 },
               );
               if (selectedDate?.day == selectedDay) {
