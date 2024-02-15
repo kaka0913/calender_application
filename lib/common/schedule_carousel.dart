@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
+import 'package:calender_application/view/schedule_add_view.dart';
 
 class ScheduleCarousel extends StatelessWidget {
   const ScheduleCarousel({
@@ -49,7 +50,12 @@ class ScheduleCarousel extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 140),
                 child: ElevatedButton(
                   onPressed: () {
-                    //フォームを表示
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const ScheduleForm(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.blue,
