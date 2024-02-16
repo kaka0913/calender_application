@@ -254,6 +254,22 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_cupertino_date_picker_fork:
+    dependency: "direct main"
+    description:
+      name: flutter_cupertino_date_picker_fork
+      sha256: edc20d4045a7cb8c75503a73b103ba30d52e1a2c7bc1bff5b4f39dc356b67ee8
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
+  flutter_datetime_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_datetime_picker
+      sha256: "8e695c63c769350e541951227c2775190ec73ceda774a315b1dc9a99d5facfe5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   flutter_datetime_picker_plus:
     dependency: "direct main"
     description:
@@ -345,7 +361,7 @@ packages:
     source: hosted
     version: "4.6.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
