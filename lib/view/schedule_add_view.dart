@@ -1,11 +1,11 @@
 // Flutter imports:
+import 'package:calender_application/repository/notifier/bottun_state_notifier.dart';
 import 'package:flutter/material.dart';
+//import 'package:flutter_cupertino_date_picker_fork/flutter_cupertino_date_picker_fork.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// Package imports:
 import 'package:intl/intl.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-final bottumStateProvider = StateProvider<bool>((ref) => false);
 
 class ScheduleForm extends ConsumerStatefulWidget {
   const ScheduleForm({super.key});
@@ -19,13 +19,14 @@ class ScheduleFormState extends ConsumerState<ScheduleForm> {
   final _contentController = TextEditingController();
   bool _allDay = false;
   DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now();
+  DateTime _endDate = DateTime.now().add(const Duration(hours: 1));
+
 
   @override
   Widget build(BuildContext context) {
-    // final bottonState = ref.watch(bottumStateProvider);
-    // final bottonStateNotifier = ref.read(bottumStateProvider.notifier);
-    //ここreadであってるのかな
+    final bottonState = ref.watch(buttonStateProvider);
+    ref.watch(buttonStateProvider.notifier)
+      .updateButtonState(_titleController, _contentController);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,8 +48,7 @@ class ScheduleFormState extends ConsumerState<ScheduleForm> {
               ),
             ),
             ElevatedButton(
-              onPressed: (_titleController.text.isNotEmpty && 
-                          _contentController.text.isNotEmpty) 
+              onPressed: (bottonState == true) 
                 ? () {
                     Navigator.pop(context);
                   } : null,
@@ -59,9 +59,9 @@ class ScheduleFormState extends ConsumerState<ScheduleForm> {
               child: Text(
                 '保存',
                 style: TextStyle(
-                  // color:  (bottonState == true) 
-                  //   ? Colors.black 
-                  //   : Colors.grey,
+                  color:  (bottonState == true) 
+                    ? Colors.black 
+                    : Colors.grey,
                 ),
               ),
             ),
@@ -114,30 +114,42 @@ class ScheduleFormState extends ConsumerState<ScheduleForm> {
                     color: Colors.white,
                     child: ListTile(
                       title: Text(
-                          '開始                            ${DateFormat(
-                            'yyyy-MM-dd HH:00',).format(_startDate)}'),
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: _startDate,
-                          firstDate: DateTime.now(),
-                          lastDate:
-                              DateTime.now().add(const Duration(days: 365)),
-                        );
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(_startDate),
-                        );
-                        if (date != null && time != null) {
-                          setState(() {
-                            _startDate = DateTime(
-                              date.year,
-                              date.month,
-                              date.day,
-                              time.hour,
-                              time.minute,
-                            );
-                          });
+                        '開始                            ${_allDay
+                          ? DateFormat('        yyyy-MM-dd').format(_startDate)
+                          : DateFormat('yyyy-MM-dd hh:mm')
+                          .format(_startDate)}',
+                      ),
+                      onTap: () {//機能的には満たせているが、見た目が微妙
+                        if(_allDay){//開始 終日の場合、年月日にみ選択
+                          DatePicker.showDatePicker(context,
+                            minTime: DateTime.now().
+                              subtract(const Duration(days: 365)),
+                            maxTime: DateTime.now().add(const Duration(days: 365)),
+                            onChanged: (date) {
+                            },
+                            onConfirm: (date) {
+                              setState(() {
+                                _startDate = date;
+                              });
+                            },
+                            currentTime: _startDate,
+                            locale: LocaleType.jp,
+                          );                    
+                        }else{//開始 月日時分
+                          DatePicker.showDateTimePicker(context,
+                            minTime: DateTime.now().
+                              subtract(const Duration(days: 365)),
+                            maxTime: DateTime.now().add(const Duration(days: 365)),
+                            onChanged: (date) {
+                            },
+                            onConfirm: (date) {
+                              setState(() {
+                                _startDate = date;
+                              });
+                            },
+                            currentTime: _startDate,
+                            locale: LocaleType.jp,
+                          );
                         }
                       },
                     ),
@@ -149,30 +161,44 @@ class ScheduleFormState extends ConsumerState<ScheduleForm> {
                     color: Colors.white,
                     child: ListTile(
                       title: Text(
-                          '終了                            ${DateFormat(
-                            'yyyy-MM-dd HH:00',).format(_endDate)}',),
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: _endDate,
-                          firstDate: DateTime.now(),
-                          lastDate:
-                              DateTime.now().add(const Duration(days: 365)),
-                        );
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(_endDate),
-                        );
-                        if (date != null && time != null) {
-                          setState(() {
-                            _endDate = DateTime(
-                              date.year,
-                              date.month,
-                              date.day,
-                              time.hour,
-                              time.minute,
-                            );
-                          });
+                        '終了                            ${_allDay
+                          ? DateFormat
+                          ('        yyyy-MM-dd').format(_endDate)
+                          : DateFormat
+                          ('yyyy-MM-dd hh:mm')
+                          .format(_endDate)}',
+                      ),
+                      onTap: () {//機能的には満たせているが、見た目が微妙
+                        if(_allDay){//終了 終日の場合、年月日にみ選択
+                          DatePicker.showDatePicker(context,
+                            minTime: DateTime.now().
+                              subtract(const Duration(days: 365)),
+                            maxTime: DateTime.now().add(const Duration(days: 365)),
+                            onChanged: (date) {
+                            },
+                            onConfirm: (date) {
+                              setState(() {
+                                _endDate = date;
+                              });
+                            },
+                            currentTime: _endDate,
+                            locale: LocaleType.jp,
+                          );                    
+                        }else{//終了 月日時分
+  // DatePicker.showDatePicker(
+  //   context,
+  //   minDateTime: DateTime.now().subtract(Duration(days: 365)),
+  //   maxDateTime: DateTime.now().add(Duration(days: 365)),
+  //   initialDateTime: _endDate,
+  //   locale: DateTimePickerLocale.jp,
+  //   pickerMode: DateTimePickerMode.datetime,
+  //   minuteDivider: 15, // 15分刻みに設定
+  //   onConfirm: (date, selectedIndex) {
+  //     setState(() {
+  //       _endDate = date;
+  //     });
+  //   },
+  // );
                         }
                       },
                     ),
