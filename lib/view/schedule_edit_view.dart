@@ -9,14 +9,14 @@ import 'package:intl/intl.dart';
 // Project imports:
 import 'package:calender_application/repository/notifier/bottun_state_notifier.dart';
 
-class ScheduleAddForm extends ConsumerStatefulWidget {
-  const ScheduleAddForm({super.key});
+class ScheduleEditForm extends ConsumerStatefulWidget {
+  const ScheduleEditForm({super.key});
 
   @override
   ScheduleFormState createState() => ScheduleFormState();
 }
 
-class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
+class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   bool _allDay = false;
@@ -42,7 +42,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
             const Padding(
               padding: EdgeInsets.only(left: 100, right: 40),
               child: Text(
-                '予定の追加',
+                '予定の編集',
                 style: TextStyle(
                   color: Colors.white,
                 ),

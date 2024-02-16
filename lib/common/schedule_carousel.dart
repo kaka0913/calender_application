@@ -53,7 +53,7 @@ class ScheduleCarousel extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute<void>(
-                        builder: (context) => const ScheduleForm(),
+                        builder: (context) => const ScheduleAddForm(),
                       ),
                     );
                   },
