@@ -17,8 +17,6 @@ class ScheduleAddForm extends ConsumerStatefulWidget {
 }
 
 class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
-  final _titleController = TextEditingController();
-  final _contentController = TextEditingController();
   bool _allDay = false;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(hours: 1));
@@ -26,8 +24,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
   @override
   Widget build(BuildContext context) {
     final bottonState = ref.watch(buttonStateProvider);
-    ref.watch(buttonStateProvider.notifier)
-        .updateButtonState(_titleController, _contentController);
+    final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,9 +32,14 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         backgroundColor: Colors.blue,
         title: Row(
           children: [
-            const Icon(
-              Icons.clear,
-              color: Colors.white,
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: const Icon(
+                Icons.clear,
+                color: Colors.white,
+              ),
             ),
             const Padding(
               padding: EdgeInsets.only(left: 100, right: 40),
@@ -52,16 +54,22 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
               onPressed: (bottonState == true)
                   ? () {
                       Navigator.pop(context);
+                      //データベースに保存する処理を書く
                     }
                   : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(),
-              ),
+              style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.
+                        all<Color>(const Color.fromARGB(255, 216, 216, 216)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(),
+                      ),
+                    ),
               child: Text(
                 '保存',
                 style: TextStyle(
-                  color: (bottonState == true) ? Colors.black : Colors.grey,
+                  color: (bottonState == true) 
+                    ? Colors.black 
+                    : const Color.fromARGB(255, 174, 167, 167),
                 ),
               ),
             ),
@@ -69,32 +77,43 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         ),
       ),
       body: ColoredBox(
-        color: Colors.grey,
+        color: const Color.fromARGB(255, 216, 216, 216),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: ColoredBox(
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Container(
+                    padding : const EdgeInsets.all(10),
                     color: Colors.white,
-                    child: TextField(
-                      controller: _titleController,
-                      decoration: const InputDecoration(
-                        hintText: 'タイトルを入力してください',
-                        labelStyle: TextStyle(
-                          color: Colors.grey,
+                    child: GestureDetector(
+                      onTap: () {
+                        primaryFocus?.unfocus();
+                      },
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          hintColor: const Color.fromARGB(255, 227, 227, 227), 
                         ),
-                        border: OutlineInputBorder(),
+                        child: TextField(
+                          controller: bottonStateNotifier.titleController,
+                          decoration: const InputDecoration(
+                            hintText: 'タイトルを入力してください',
+                            labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 237, 235, 235),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          onSubmitted: (_) 
+                            => bottonStateNotifier.updateState(),
+                        ),
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 30),
                   child: ColoredBox(
                     color: Colors.white,
                     child: SwitchListTile(
@@ -105,6 +124,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                           _allDay = value;
                         });
                       },
+                      activeColor: Colors.blue,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey,
                     ),
                   ),
                 ),
@@ -168,7 +190,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                     color: Colors.white,
                     child: ListTile(
                       title: Text(
-                        '終了                            ${_allDay ? DateFormat('        yyyy-MM-dd').format(endDate) : DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
+                        '終了                            ${_allDay 
+                        ? DateFormat('        yyyy-MM-dd').format(endDate) 
+                        : DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙
@@ -216,22 +240,38 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    FocusScope.of(context).unfocus();
+                    primaryFocus?.unfocus();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: ColoredBox(
+                    padding: const EdgeInsets.only(top: 15, bottom: 10),
+                    child: Container(
                       color: Colors.white,
-                      child: TextField(
-                        controller: _contentController,
-                        decoration: const InputDecoration(
-                          hintText: 'コメントを入力してください',
-                          labelStyle: TextStyle(
-                            color: Colors.grey,
+                      padding: const EdgeInsets.only(
+                        bottom: 80, left: 10, right: 10,),
+                      child: GestureDetector(
+                        onTap: () {
+                          primaryFocus?.unfocus();
+                        },
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            hintColor: 
+                              const Color.fromARGB(255, 237, 235, 235), 
                           ),
-                          border: OutlineInputBorder(),
+                          child: TextField(
+                            controller: bottonStateNotifier.contentController,
+                            decoration: const InputDecoration(
+                              hintText: 'コメントを入力してください',
+                              border : InputBorder.none,
+                              labelStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            maxLines: null,
+                            onSubmitted: (_) 
+                              => bottonStateNotifier.updateState(),
+                            textInputAction: TextInputAction.done,
+                          ),
                         ),
-                        maxLines: 5,
                       ),
                     ),
                   ),
