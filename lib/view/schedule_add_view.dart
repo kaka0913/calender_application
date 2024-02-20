@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:calender_application/model/schedule_form_model.dart';
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +27,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
   Widget build(BuildContext context) {
     final bottonState = ref.watch(buttonStateProvider);
     final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
+    final database = ref.watch(driftDbProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +57,15 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
               onPressed: (bottonState == true)
                   ? () {
                       Navigator.pop(context);
-                      //データベースに保存する処理を書く
+                      database.addSchedule(
+                        ScheduleForm(
+                          title: bottonStateNotifier.titleController.text,
+                          startTime: startDate,
+                          endTime: endDate,
+                          isAllDay: _allDay,
+                          content: bottonStateNotifier.contentController.text,
+                        ),
+                      );
                     }
                   : null,
               style: ButtonStyle(
