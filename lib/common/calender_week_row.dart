@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Project imports:
 import 'package:calender_application/common/calender_date_box.dart';
 import 'package:calender_application/common/schedule_carousel.dart';
-import 'package:calender_application/repository/drift_repository.dart';
 
 class WeekRow extends ConsumerWidget {
   const WeekRow(
@@ -28,21 +27,7 @@ class WeekRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //テストデータ
 
-    const id = 1;
-    const title = 'テストタイトルたいとるたいとる';
-    final startTime = DateTime.now();
-    final endTime = DateTime.now().add(const Duration(hours: 1));
-    const isAllDay = false;
-
-    final scheduleExample = Schedule(
-      id: id,
-      title: title,
-      startTime: startTime,
-      endTime: endTime,
-      isAllDay: isAllDay,
-    );
 
     //final repository = ref.watch(sckeduleDatabaseProvider);
 
@@ -75,7 +60,7 @@ class WeekRow extends ConsumerWidget {
                           horizontal: 8,
                           vertical: 100,
                         ),
-                        child: ScheduleCarousel(schedule: scheduleExample),
+                        child: const ScheduleCarousel(),
                       );
                     },
                   );

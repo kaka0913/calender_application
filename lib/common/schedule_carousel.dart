@@ -7,16 +7,11 @@ import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/view/schedule_add_view.dart';
 
 class ScheduleCarousel extends StatelessWidget {
-  const ScheduleCarousel({
-    required this.schedule,
-    super.key,
-  });
-
-  final Schedule schedule;
+  const ScheduleCarousel({super.key,});
 
   @override
   Widget build(BuildContext context) {
-    const id = 1;
+    const id = 1053;
     const title = 'テストタイトルたいとるたいとる';
     final day = DateTime.now();
     final startTime = DateTime.now();
