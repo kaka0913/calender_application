@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
-import 'package:calender_application/repository/notifier/bottun_state_notifier.dart';
+import 'package:calender_application/repository/notifier/buttun_state_notifier.dart';
 
 class ScheduleAddForm extends ConsumerStatefulWidget {
   const ScheduleAddForm({super.key});
@@ -114,9 +114,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                     color: Colors.white,
                     child: ListTile(
                       title: Text(
-                        '開始                            ${_allDay ? 
-                        DateFormat('        yyyy-MM-dd').format(startDate) : 
-                        DateFormat('yyyy-MM-dd hh:mm').format(startDate)}',
+                        '開始                            ${_allDay 
+                        ? DateFormat('        yyyy-MM-dd').format(startDate) 
+                        : DateFormat('yyyy-MM-dd hh:mm').format(startDate)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙
@@ -168,9 +168,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                     color: Colors.white,
                     child: ListTile(
                       title: Text(
-                        '終了                            ${_allDay ? 
-                        DateFormat('        yyyy-MM-dd').format(endDate) : 
-                        DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
+                        '終了                            ${_allDay ? DateFormat('        yyyy-MM-dd').format(endDate) : DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙
