@@ -32,7 +32,6 @@ class WeekRow extends ConsumerWidget {
 
     const id = 1;
     const title = 'テストタイトルたいとるたいとる';
-    final day = DateTime.now();
     final startTime = DateTime.now();
     final endTime = DateTime.now().add(const Duration(hours: 1));
     const isAllDay = false;
@@ -40,7 +39,6 @@ class WeekRow extends ConsumerWidget {
     final scheduleExample = Schedule(
       id: id,
       title: title,
-      day: day,
       startTime: startTime,
       endTime: endTime,
       isAllDay: isAllDay,

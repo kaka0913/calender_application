@@ -26,7 +26,6 @@ class ScheduleCarousel extends StatelessWidget {
     final schedule = Schedule(
       id: id,
       title: title,
-      day: day,
       startTime: startTime,
       endTime: endTime,
       isAllDay: isAllDay,
