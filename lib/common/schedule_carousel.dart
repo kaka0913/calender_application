@@ -26,52 +26,55 @@ class ScheduleCarousel extends StatelessWidget {
       isAllDay: isAllDay,
     );
 
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).size.height * 0.03,
         left: MediaQuery.of(context).size.width * 0.03,
         right: MediaQuery.of(context).size.width * 0.03,
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                '${day.year}/${day.month}/${day.day}',
-                style: const TextStyle(fontSize: 18),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 140),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const ScheduleAddForm(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  child: const Icon(
-                    Icons.add,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,//機能してないかも
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  '${day.year}/${day.month}/${day.day}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 140),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => const ScheduleAddForm(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const Divider(
-            color: Color.fromARGB(255, 214, 206, 206),
-            height: 10,
-            thickness: 1,
-            indent: 1,
-            endIndent: 1,
-          ),
-          ScheduleTile(schedule: schedule),
-        ],
+              ],
+            ),
+            const Divider(
+              color: Color.fromARGB(255, 214, 206, 206),
+              height: 10,
+              thickness: 1,
+              indent: 1,
+              endIndent: 1,
+            ),
+            ScheduleTile(schedule: schedule),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:calender_application/common/schedule_carousel.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -6,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:calender_application/common/calender_date_box.dart';
-import 'package:calender_application/common/schedule_carousel.dart';
 
 class WeekRow extends ConsumerWidget {
   const WeekRow(
