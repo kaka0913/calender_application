@@ -46,10 +46,13 @@ class WeekRow extends ConsumerWidget {
                   return PageView.builder(
                     controller: PageController(
                       viewportFraction: 0.9,
-                      initialPage: 1, //初期表示ページ
+                      initialPage: 50,
                     ),
-                    itemCount: 3,
+                    itemCount: 101,
+                    //とりあえずは前後50日分のスケジュールを表示
                     itemBuilder: (BuildContext context, int index) {
+                      final date = 
+                        selectedDate?.add(Duration(days: index - 50));
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -59,7 +62,7 @@ class WeekRow extends ConsumerWidget {
                           horizontal: 8,
                           vertical: 100,
                         ),
-                        child: ScheduleCarousel(selectedDate: selectedDate),
+                        child: ScheduleCarousel(selectedDate: date), 
                       );
                     },
                   );

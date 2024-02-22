@@ -71,9 +71,14 @@ class ScheduleCarousel extends ConsumerWidget {
                   AsyncSnapshot<List<Schedule>> snapshot,) {
                     if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}'); 
-                    } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+                    } else if (snapshot.data == null || 
+                               snapshot.data!.isEmpty) {
                       // データがnullまたは空の場合
-                      return const Center(child: Text('予定がありません'));
+                      return const Expanded(
+                        child: Center(
+                          child: Text('予定がありません'),
+                        ),
+                      );
                     } else {
                       // データが存在する場合
                       return ListView.builder(
