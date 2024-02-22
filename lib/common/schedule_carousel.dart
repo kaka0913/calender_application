@@ -69,25 +69,27 @@ class ScheduleCarousel extends ConsumerWidget {
               future: repository.getSchedules(selectedDate), 
               builder: (BuildContext context, 
                   AsyncSnapshot<List<Schedule>> snapshot,) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();  
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}'); 
-                } else {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return ScheduleTile(schedule: snapshot.data![index]);
-                    },
-                  );
-                }
-              },
-            ),
-          ],
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}'); 
+                    } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+                      // データがnullまたは空の場合
+                      return const Center(child: Text('予定がありません'));
+                    } else {
+                      // データが存在する場合
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return ScheduleTile(schedule: snapshot.data![index]);
+                        },
+                      );
+                    }
+                  },
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
-}
