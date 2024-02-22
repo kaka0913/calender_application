@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
-import 'package:calender_application/repository/notifier/buttun_state_notifier.dart';
+import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleAddForm extends ConsumerStatefulWidget {
   const ScheduleAddForm({super.key});
