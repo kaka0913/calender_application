@@ -32,9 +32,12 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   @override
   int get schemaVersion => 1;
 
-  //日付を指定してスケジュールを取得するように変更必要
-  Future<List<Schedule>> getSchedules(DateTime time) {
-    return select(schedules).get();
+  Future<List<Schedule>> getSchedules(DateTime? time) {
+    return (select(schedules)..where((s) => 
+      s.startTime.year.equals(time?.year) &
+      s.startTime.month.equals(time?.month) &
+      s.startTime.day.equals(time?.day),
+    )).get();
   }
 
   //安全にデータを追加するためにScheduleFormクラスを使用

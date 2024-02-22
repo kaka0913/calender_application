@@ -5,26 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/view/schedule_add_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ScheduleCarousel extends StatelessWidget {
-  const ScheduleCarousel({super.key,});
+class ScheduleCarousel extends ConsumerWidget {
+  const ScheduleCarousel({
+    required this.selectedDate,
+    super.key,}  
+    );
+
+  final DateTime? selectedDate;
 
   @override
-  Widget build(BuildContext context) {
-    const id = 1053;
-    const title = 'テストタイトルたいとるたいとる';
-    final day = DateTime.now();
-    final startTime = DateTime.now();
-    final endTime = DateTime.now().add(const Duration(hours: 1));
-    const isAllDay = false;
-
-    final schedule = Schedule(
-      id: id,
-      title: title,
-      startTime: startTime,
-      endTime: endTime,
-      isAllDay: isAllDay,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final repository = ref.watch(driftDbProvider);
 
     return Container(
       padding: EdgeInsets.only(
@@ -39,7 +32,7 @@ class ScheduleCarousel extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '${day.year}/${day.month}/${day.day}',
+                  '${selectedDate?.year}/${selectedDate?.month}/${selectedDate?.day}',
                   style: const TextStyle(fontSize: 18),
                 ),
                 Padding(
@@ -72,7 +65,26 @@ class ScheduleCarousel extends StatelessWidget {
               indent: 1,
               endIndent: 1,
             ),
-            ScheduleTile(schedule: schedule),
+            FutureBuilder<List<Schedule>>(
+              future: repository.getSchedules(selectedDate), 
+              builder: (BuildContext context, 
+                  AsyncSnapshot<List<Schedule>> snapshot,) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();  
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}'); 
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ScheduleTile(schedule: snapshot.data![index]);
+                    },
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),

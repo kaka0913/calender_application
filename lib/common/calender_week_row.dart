@@ -28,7 +28,6 @@ class WeekRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-
     //final repository = ref.watch(sckeduleDatabaseProvider);
 
     return Row(
@@ -60,7 +59,7 @@ class WeekRow extends ConsumerWidget {
                           horizontal: 8,
                           vertical: 100,
                         ),
-                        child: const ScheduleCarousel(),
+                        child: ScheduleCarousel(selectedDate: selectedDate),
                       );
                     },
                   );
