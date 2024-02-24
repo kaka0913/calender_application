@@ -1,83 +1,102 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Project imports:
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/view/schedule_add_view.dart';
 
-class ScheduleCarousel extends StatelessWidget {
+class ScheduleCarousel extends ConsumerWidget {
   const ScheduleCarousel({
-    required this.schedule,
+    required this.selectedDate,
     super.key,
   });
 
-  final Schedule schedule;
+  final DateTime? selectedDate;
 
   @override
-  Widget build(BuildContext context) {
-    const id = 1;
-    const title = 'テストタイトルたいとるたいとる';
-    final day = DateTime.now();
-    final startTime = DateTime.now();
-    final endTime = DateTime.now().add(const Duration(hours: 1));
-    const isAllDay = false;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final repository = ref.watch(driftDbProvider);
 
-    final schedule = Schedule(
-      id: id,
-      title: title,
-      day: day,
-      startTime: startTime,
-      endTime: endTime,
-      isAllDay: isAllDay,
-    );
-
-    return Padding(
+    return Container(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).size.height * 0.03,
         left: MediaQuery.of(context).size.width * 0.03,
         right: MediaQuery.of(context).size.width * 0.03,
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                '${day.year}/${day.month}/${day.day}',
-                style: const TextStyle(fontSize: 18),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 140),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const ScheduleAddForm(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  child: const Icon(
-                    Icons.add,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque, //機能してないかも
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  '${selectedDate?.year}/${selectedDate?.month}/${selectedDate?.day}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 140),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => const ScheduleAddForm(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const Divider(
-            color: Color.fromARGB(255, 214, 206, 206),
-            height: 10,
-            thickness: 1,
-            indent: 1,
-            endIndent: 1,
-          ),
-          ScheduleTile(schedule: schedule),
-        ],
+              ],
+            ),
+            const Divider(
+              color: Color.fromARGB(255, 214, 206, 206),
+              height: 10,
+              thickness: 1,
+              indent: 1,
+              endIndent: 1,
+            ),
+            FutureBuilder<List<Schedule>>(
+              future: repository.getSchedules(selectedDate),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<List<Schedule>> snapshot,
+              ) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+                  // データがnullまたは空の場合
+                  return const Expanded(
+                    child: Center(
+                      child: Text('予定がありません'),
+                    ),
+                  );
+                } else {
+                  // データが存在する場合
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ScheduleTile(schedule: snapshot.data![index]);
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

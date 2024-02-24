@@ -2,36 +2,36 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:calender_application/common/calender_widget.dart';
+import 'package:calender_application/repository/provider/selected_day_provider.dart';
 import 'package:calender_application/view/calender_controller.dart';
 
-class HomePage extends HookWidget {
+final previousPageProvider = StateProvider<int>((ref) => 50);
+
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final setDate = useState<DateTime>(DateTime.now());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final showingDateTime = ref.watch(showingDateTimeProvider);
+    final dateTimeNotifier = ref.watch(showingDateTimeProvider.notifier);
 
-    Future<void> onNextTap() async {
-      await DatePicker.showDatePicker(
-        context,
-        minTime: DateTime(2000),
-        maxTime: DateTime(2100),
-        onConfirm: (date) {
-          setDate.value = DateTime(date.year, date.month);
-        },
-        currentTime: DateTime.now(),
-        locale: LocaleType.jp,
-      );
-    }
+    final controller = PageController(initialPage: 50);
+    final previousPage = ref.watch(previousPageProvider);
+    final pageNotifier = ref.watch(previousPageProvider.notifier);
 
-    void toCurrentMonth() {
-      setDate.value = DateTime.now();
-    }
+    controller.addListener(() {
+      if (controller.page!.round() > previousPage) {
+        dateTimeNotifier.toNextMonth();
+        pageNotifier.state++;
+      } else if (controller.page!.round() < previousPage) {
+        dateTimeNotifier.toPreviousMonth();
+        pageNotifier.state--;
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -49,22 +49,17 @@ class HomePage extends HookWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              CalendarController(
-                currentMonth: '${setDate.value.year}年 ${setDate.value.month}月',
-                onNextTap: onNextTap,
-                toCurrentMonth: toCurrentMonth,
-              ),
+              const CalendarController(),
               Expanded(
                 child: PageView.builder(
-                  itemCount: 100,
-                  controller:
-                      PageController(initialPage: setDate.value.month - 1),
-                  onPageChanged: (value) {
-                    setDate.value = DateTime(setDate.value.year, value + 1);
-                  },
+                  itemCount: 101,
+                  controller: controller,
                   itemBuilder: (context, index) {
                     return Calendar(
-                      date: DateTime(setDate.value.year, index + 1),
+                      date: DateTime(
+                        showingDateTime.year,
+                        showingDateTime.month,
+                      ),
                     );
                   },
                 ),

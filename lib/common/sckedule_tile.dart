@@ -7,7 +7,7 @@ import 'package:calender_application/repository/drift_repository.dart';
 class ScheduleTile extends StatelessWidget {
   const ScheduleTile({required this.schedule, super.key});
 
-  final Schedule schedule;
+  final Schedule? schedule;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +20,13 @@ class ScheduleTile extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    '${schedule.startTime.hour.toString().padLeft(2, '0')}:${
-                      schedule.startTime.minute.toString().padLeft(2, '0')}',
+                    '${schedule?.startTime.hour.toString().padLeft(2, '0')}:${
+                      schedule?.startTime.minute.toString().padLeft(2, '0')}',
                     style: const TextStyle(fontSize: 10),
                   ),
                   Text(
-                    '${schedule.endTime.hour.toString().padLeft(2, '0')}:${
-                      schedule.endTime.minute.toString().padLeft(2, '0')}',
+                    '${schedule?.endTime.hour.toString().padLeft(2, '0')}:${
+                      schedule?.endTime.minute.toString().padLeft(2, '0')}',
                     style: const TextStyle(fontSize: 10),
                   ),
                 ],
@@ -43,7 +43,7 @@ class ScheduleTile extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  'タイトル: ${schedule.title}',
+                  'タイトル: ${schedule?.title}',
                   style: const TextStyle(fontSize: 15),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,

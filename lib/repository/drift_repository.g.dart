@@ -10,17 +10,17 @@ part of 'drift_repository.dart';
 class Schedule extends DataClass implements Insertable<Schedule> {
   final int id;
   final String title;
-  final DateTime day;
   final DateTime startTime;
   final DateTime endTime;
   final bool isAllDay;
+  final String? content;
   Schedule(
       {required this.id,
       required this.title,
-      required this.day,
       required this.startTime,
       required this.endTime,
-      required this.isAllDay});
+      required this.isAllDay,
+      this.content});
   factory Schedule.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Schedule(
@@ -28,14 +28,14 @@ class Schedule extends DataClass implements Insertable<Schedule> {
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       title: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      day: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}day'])!,
       startTime: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}start_time'])!,
       endTime: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}end_time'])!,
       isAllDay: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_all_day'])!,
+      content: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}content']),
     );
   }
   @override
@@ -43,10 +43,12 @@ class Schedule extends DataClass implements Insertable<Schedule> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
-    map['day'] = Variable<DateTime>(day);
     map['start_time'] = Variable<DateTime>(startTime);
     map['end_time'] = Variable<DateTime>(endTime);
     map['is_all_day'] = Variable<bool>(isAllDay);
+    if (!nullToAbsent || content != null) {
+      map['content'] = Variable<String?>(content);
+    }
     return map;
   }
 
@@ -54,10 +56,12 @@ class Schedule extends DataClass implements Insertable<Schedule> {
     return SchedulesCompanion(
       id: Value(id),
       title: Value(title),
-      day: Value(day),
       startTime: Value(startTime),
       endTime: Value(endTime),
       isAllDay: Value(isAllDay),
+      content: content == null && nullToAbsent
+          ? const Value.absent()
+          : Value(content),
     );
   }
 
@@ -67,10 +71,10 @@ class Schedule extends DataClass implements Insertable<Schedule> {
     return Schedule(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
-      day: serializer.fromJson<DateTime>(json['day']),
       startTime: serializer.fromJson<DateTime>(json['startTime']),
       endTime: serializer.fromJson<DateTime>(json['endTime']),
       isAllDay: serializer.fromJson<bool>(json['isAllDay']),
+      content: serializer.fromJson<String?>(json['content']),
     );
   }
   @override
@@ -79,114 +83,114 @@ class Schedule extends DataClass implements Insertable<Schedule> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
-      'day': serializer.toJson<DateTime>(day),
       'startTime': serializer.toJson<DateTime>(startTime),
       'endTime': serializer.toJson<DateTime>(endTime),
       'isAllDay': serializer.toJson<bool>(isAllDay),
+      'content': serializer.toJson<String?>(content),
     };
   }
 
   Schedule copyWith(
           {int? id,
           String? title,
-          DateTime? day,
           DateTime? startTime,
           DateTime? endTime,
-          bool? isAllDay}) =>
+          bool? isAllDay,
+          String? content}) =>
       Schedule(
         id: id ?? this.id,
         title: title ?? this.title,
-        day: day ?? this.day,
         startTime: startTime ?? this.startTime,
         endTime: endTime ?? this.endTime,
         isAllDay: isAllDay ?? this.isAllDay,
+        content: content ?? this.content,
       );
   @override
   String toString() {
     return (StringBuffer('Schedule(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('day: $day, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
-          ..write('isAllDay: $isAllDay')
+          ..write('isAllDay: $isAllDay, ')
+          ..write('content: $content')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, day, startTime, endTime, isAllDay);
+  int get hashCode =>
+      Object.hash(id, title, startTime, endTime, isAllDay, content);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Schedule &&
           other.id == this.id &&
           other.title == this.title &&
-          other.day == this.day &&
           other.startTime == this.startTime &&
           other.endTime == this.endTime &&
-          other.isAllDay == this.isAllDay);
+          other.isAllDay == this.isAllDay &&
+          other.content == this.content);
 }
 
 class SchedulesCompanion extends UpdateCompanion<Schedule> {
   final Value<int> id;
   final Value<String> title;
-  final Value<DateTime> day;
   final Value<DateTime> startTime;
   final Value<DateTime> endTime;
   final Value<bool> isAllDay;
+  final Value<String?> content;
   const SchedulesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
-    this.day = const Value.absent(),
     this.startTime = const Value.absent(),
     this.endTime = const Value.absent(),
     this.isAllDay = const Value.absent(),
+    this.content = const Value.absent(),
   });
   SchedulesCompanion.insert({
     this.id = const Value.absent(),
     required String title,
-    required DateTime day,
     required DateTime startTime,
     required DateTime endTime,
     required bool isAllDay,
+    this.content = const Value.absent(),
   })  : title = Value(title),
-        day = Value(day),
         startTime = Value(startTime),
         endTime = Value(endTime),
         isAllDay = Value(isAllDay);
   static Insertable<Schedule> custom({
     Expression<int>? id,
     Expression<String>? title,
-    Expression<DateTime>? day,
     Expression<DateTime>? startTime,
     Expression<DateTime>? endTime,
     Expression<bool>? isAllDay,
+    Expression<String?>? content,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
-      if (day != null) 'day': day,
       if (startTime != null) 'start_time': startTime,
       if (endTime != null) 'end_time': endTime,
       if (isAllDay != null) 'is_all_day': isAllDay,
+      if (content != null) 'content': content,
     });
   }
 
   SchedulesCompanion copyWith(
       {Value<int>? id,
       Value<String>? title,
-      Value<DateTime>? day,
       Value<DateTime>? startTime,
       Value<DateTime>? endTime,
-      Value<bool>? isAllDay}) {
+      Value<bool>? isAllDay,
+      Value<String?>? content}) {
     return SchedulesCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
-      day: day ?? this.day,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       isAllDay: isAllDay ?? this.isAllDay,
+      content: content ?? this.content,
     );
   }
 
@@ -199,9 +203,6 @@ class SchedulesCompanion extends UpdateCompanion<Schedule> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (day.present) {
-      map['day'] = Variable<DateTime>(day.value);
-    }
     if (startTime.present) {
       map['start_time'] = Variable<DateTime>(startTime.value);
     }
@@ -211,6 +212,9 @@ class SchedulesCompanion extends UpdateCompanion<Schedule> {
     if (isAllDay.present) {
       map['is_all_day'] = Variable<bool>(isAllDay.value);
     }
+    if (content.present) {
+      map['content'] = Variable<String?>(content.value);
+    }
     return map;
   }
 
@@ -219,10 +223,10 @@ class SchedulesCompanion extends UpdateCompanion<Schedule> {
     return (StringBuffer('SchedulesCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('day: $day, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
-          ..write('isAllDay: $isAllDay')
+          ..write('isAllDay: $isAllDay, ')
+          ..write('content: $content')
           ..write(')'))
         .toString();
   }
@@ -246,11 +250,6 @@ class $SchedulesTable extends Schedules
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _dayMeta = const VerificationMeta('day');
-  @override
-  late final GeneratedColumn<DateTime?> day = GeneratedColumn<DateTime?>(
-      'day', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _startTimeMeta = const VerificationMeta('startTime');
   @override
   late final GeneratedColumn<DateTime?> startTime = GeneratedColumn<DateTime?>(
@@ -268,9 +267,14 @@ class $SchedulesTable extends Schedules
       type: const BoolType(),
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (is_all_day IN (0, 1))');
+  final VerificationMeta _contentMeta = const VerificationMeta('content');
+  @override
+  late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
+      'content', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, title, day, startTime, endTime, isAllDay];
+      [id, title, startTime, endTime, isAllDay, content];
   @override
   String get aliasedName => _alias ?? 'schedules';
   @override
@@ -289,12 +293,6 @@ class $SchedulesTable extends Schedules
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
-    if (data.containsKey('day')) {
-      context.handle(
-          _dayMeta, day.isAcceptableOrUnknown(data['day']!, _dayMeta));
-    } else if (isInserting) {
-      context.missing(_dayMeta);
-    }
     if (data.containsKey('start_time')) {
       context.handle(_startTimeMeta,
           startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
@@ -312,6 +310,10 @@ class $SchedulesTable extends Schedules
           isAllDay.isAcceptableOrUnknown(data['is_all_day']!, _isAllDayMeta));
     } else if (isInserting) {
       context.missing(_isAllDayMeta);
+    }
+    if (data.containsKey('content')) {
+      context.handle(_contentMeta,
+          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
     }
     return context;
   }

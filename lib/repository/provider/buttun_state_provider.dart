@@ -13,8 +13,8 @@ class ButtonState extends StateNotifier<bool> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
 
-  void updateState () {
-    state = titleController.text.isNotEmpty 
-      && contentController.text.isNotEmpty;
+  void updateState() {
+    state =
+        titleController.text.isNotEmpty && contentController.text.isNotEmpty;
   }
 }

@@ -1,24 +1,29 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-class CalendarController extends StatelessWidget {
+// Package imports:
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
+import 'package:calender_application/repository/provider/selected_day_provider.dart';
+
+class CalendarController extends ConsumerWidget {
   const CalendarController({
-    required this.currentMonth,
-    required this.toCurrentMonth,
-    required this.onNextTap,
     super.key,
   });
 
-  final String currentMonth;
-  final VoidCallback toCurrentMonth;
-  final VoidCallback onNextTap;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final showingDateTime = ref.watch(showingDateTimeProvider);
+    final showDateNotifier = ref.watch(showingDateTimeProvider.notifier);
+
     return Row(
       children: [
         InkWell(
-          onTap: toCurrentMonth,
+          onTap: () {
+            showDateNotifier.updateDate(DateTime.now());
+          },
           child: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -39,14 +44,25 @@ class CalendarController extends StatelessWidget {
         const SizedBox(width: 60),
         Center(
           child: Text(
-            currentMonth,
+            '${showingDateTime.year}年 ${showingDateTime.month}月',
             style: const TextStyle(
               fontSize: 20,
             ),
           ),
         ),
         InkWell(
-          onTap: onNextTap,
+          onTap: () {
+            DatePicker.showDatePicker(
+              context,
+              minTime: DateTime(2000),
+              maxTime: DateTime(2100),
+              onConfirm: (date) {
+                showDateNotifier.updateDate(DateTime(date.year, date.month));
+              },
+              currentTime: DateTime.now(),
+              locale: LocaleType.jp,
+            );
+          },
           child: const Padding(
             padding: EdgeInsets.all(8),
             child: Icon(Icons.arrow_drop_down),

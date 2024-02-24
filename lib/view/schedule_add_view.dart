@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:calender_application/model/schedule_form_model.dart';
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -7,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
-import 'package:calender_application/repository/notifier/buttun_state_notifier.dart';
+import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleAddForm extends ConsumerStatefulWidget {
   const ScheduleAddForm({super.key});
@@ -25,6 +27,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
   Widget build(BuildContext context) {
     final bottonState = ref.watch(buttonStateProvider);
     final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
+    final database = ref.watch(driftDbProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -54,22 +57,30 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
               onPressed: (bottonState == true)
                   ? () {
                       Navigator.pop(context);
-                      //データベースに保存する処理を書く
+                      database.addSchedule(
+                        ScheduleForm(
+                          title: bottonStateNotifier.titleController.text,
+                          startTime: startDate,
+                          endTime: endDate,
+                          isAllDay: _allDay,
+                          content: bottonStateNotifier.contentController.text,
+                        ),
+                      );
                     }
                   : null,
               style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.
-                        all<Color>(const Color.fromARGB(255, 216, 216, 216)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(),
-                      ),
-                    ),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color.fromARGB(255, 216, 216, 216),),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  const RoundedRectangleBorder(),
+                ),
+              ),
               child: Text(
                 '保存',
                 style: TextStyle(
-                  color: (bottonState == true) 
-                    ? Colors.black 
-                    : const Color.fromARGB(255, 174, 167, 167),
+                  color: (bottonState == true)
+                      ? Colors.black
+                      : const Color.fromARGB(255, 174, 167, 167),
                 ),
               ),
             ),
@@ -86,7 +97,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Container(
-                    padding : const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     color: Colors.white,
                     child: GestureDetector(
                       onTap: () {
@@ -94,7 +105,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                       },
                       child: Theme(
                         data: Theme.of(context).copyWith(
-                          hintColor: const Color.fromARGB(255, 227, 227, 227), 
+                          hintColor: const Color.fromARGB(255, 227, 227, 227),
                         ),
                         child: TextField(
                           controller: bottonStateNotifier.titleController,
@@ -105,8 +116,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                             ),
                             border: InputBorder.none,
                           ),
-                          onSubmitted: (_) 
-                            => bottonStateNotifier.updateState(),
+                          onSubmitted: (_) => bottonStateNotifier.updateState(),
                         ),
                       ),
                     ),
@@ -247,28 +257,30 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                     child: Container(
                       color: Colors.white,
                       padding: const EdgeInsets.only(
-                        bottom: 80, left: 10, right: 10,),
+                        bottom: 80,
+                        left: 10,
+                        right: 10,
+                      ),
                       child: GestureDetector(
                         onTap: () {
                           primaryFocus?.unfocus();
                         },
                         child: Theme(
                           data: Theme.of(context).copyWith(
-                            hintColor: 
-                              const Color.fromARGB(255, 237, 235, 235), 
+                            hintColor: const Color.fromARGB(255, 237, 235, 235),
                           ),
                           child: TextField(
                             controller: bottonStateNotifier.contentController,
                             decoration: const InputDecoration(
                               hintText: 'コメントを入力してください',
-                              border : InputBorder.none,
+                              border: InputBorder.none,
                               labelStyle: TextStyle(
                                 color: Colors.grey,
                               ),
                             ),
                             maxLines: null,
-                            onSubmitted: (_) 
-                              => bottonStateNotifier.updateState(),
+                            onSubmitted: (_) =>
+                                bottonStateNotifier.updateState(),
                             textInputAction: TextInputAction.done,
                           ),
                         ),
