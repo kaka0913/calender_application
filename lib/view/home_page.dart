@@ -1,11 +1,13 @@
 // Flutter imports:
-import 'package:calender_application/repository/provider/selected_day_provider.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:calender_application/common/calender_widget.dart';
+import 'package:calender_application/repository/provider/selected_day_provider.dart';
 import 'package:calender_application/view/calender_controller.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final previousPageProvider = StateProvider<int>((ref) => 50);
 
@@ -50,12 +52,14 @@ class HomePage extends ConsumerWidget {
               const CalendarController(),
               Expanded(
                 child: PageView.builder(
-                  itemCount: 101, 
-                  controller: controller, 
+                  itemCount: 101,
+                  controller: controller,
                   itemBuilder: (context, index) {
                     return Calendar(
-                      date: DateTime(showingDateTime.year, 
-                                     showingDateTime.month,),
+                      date: DateTime(
+                        showingDateTime.year,
+                        showingDateTime.month,
+                      ),
                     );
                   },
                 ),

@@ -1,17 +1,19 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Project imports:
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/view/schedule_add_view.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ScheduleCarousel extends ConsumerWidget {
   const ScheduleCarousel({
     required this.selectedDate,
-    super.key,}  
-    );
+    super.key,
+  });
 
   final DateTime? selectedDate;
 
@@ -26,7 +28,7 @@ class ScheduleCarousel extends ConsumerWidget {
         right: MediaQuery.of(context).size.width * 0.03,
       ),
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,//機能してないかも
+        behavior: HitTestBehavior.opaque, //機能してないかも
         child: Column(
           children: [
             Row(
@@ -66,35 +68,36 @@ class ScheduleCarousel extends ConsumerWidget {
               endIndent: 1,
             ),
             FutureBuilder<List<Schedule>>(
-              future: repository.getSchedules(selectedDate), 
-              builder: (BuildContext context, 
-                  AsyncSnapshot<List<Schedule>> snapshot,) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}'); 
-                    } else if (snapshot.data == null || 
-                               snapshot.data!.isEmpty) {
-                      // データがnullまたは空の場合
-                      return const Expanded(
-                        child: Center(
-                          child: Text('予定がありません'),
-                        ),
-                      );
-                    } else {
-                      // データが存在する場合
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return ScheduleTile(schedule: snapshot.data![index]);
-                        },
-                      );
-                    }
-                  },
-              ),
-            ],
-          ),
+              future: repository.getSchedules(selectedDate),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<List<Schedule>> snapshot,
+              ) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+                  // データがnullまたは空の場合
+                  return const Expanded(
+                    child: Center(
+                      child: Text('予定がありません'),
+                    ),
+                  );
+                } else {
+                  // データが存在する場合
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ScheduleTile(schedule: snapshot.data![index]);
+                    },
+                  );
+                }
+              },
+            ),
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
+}

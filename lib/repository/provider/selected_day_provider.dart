@@ -1,9 +1,10 @@
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //選択された日付を取得する
-final selectedDateProvider = 
-  StateNotifierProvider<SelectedDateState, DateTime>(
-    (ref) => SelectedDateState(),);
+final selectedDateProvider = StateNotifierProvider<SelectedDateState, DateTime>(
+  (ref) => SelectedDateState(),
+);
 
 class SelectedDateState extends StateNotifier<DateTime> {
   SelectedDateState() : super(DateTime.now());
@@ -14,10 +15,10 @@ class SelectedDateState extends StateNotifier<DateTime> {
 }
 
 //カレンダーが表示している年月を取得する
-final showingDateTimeProvider = 
-  StateNotifierProvider.autoDispose<ShowingDateTimeState, DateTime>(
-    (ref) => ShowingDateTimeState(),);
-
+final showingDateTimeProvider =
+    StateNotifierProvider.autoDispose<ShowingDateTimeState, DateTime>(
+  (ref) => ShowingDateTimeState(),
+);
 
 class ShowingDateTimeState extends StateNotifier<DateTime> {
   ShowingDateTimeState() : super(DateTime.now());

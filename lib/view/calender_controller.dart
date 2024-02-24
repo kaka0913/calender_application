@@ -1,14 +1,17 @@
 // Flutter imports:
-import 'package:calender_application/repository/provider/selected_day_provider.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
+import 'package:calender_application/repository/provider/selected_day_provider.dart';
+
 class CalendarController extends ConsumerWidget {
-  const CalendarController(
-    {
+  const CalendarController({
     super.key,
   });
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,7 +21,7 @@ class CalendarController extends ConsumerWidget {
     return Row(
       children: [
         InkWell(
-          onTap: (){
+          onTap: () {
             showDateNotifier.updateDate(DateTime.now());
           },
           child: Container(
@@ -41,8 +44,7 @@ class CalendarController extends ConsumerWidget {
         const SizedBox(width: 60),
         Center(
           child: Text(
-            '${showingDateTime.year}年 ${
-                    showingDateTime.month}月',
+            '${showingDateTime.year}年 ${showingDateTime.month}月',
             style: const TextStyle(
               fontSize: 20,
             ),

@@ -1,13 +1,18 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
 import 'package:calender_application/common/schedule_carousel.dart';
 import 'package:calender_application/repository/provider/selected_day_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DateBox extends ConsumerWidget {
   const DateBox({
-    required this.date, 
+    required this.date,
     required this.weekday,
-    required this.isSevenDays,//七曜表示の場合はtrue
+    required this.isSevenDays, //七曜表示の場合はtrue
     super.key,
   });
 
@@ -20,39 +25,39 @@ class DateBox extends ConsumerWidget {
     final today = DateTime.now();
     final selectedDateNotifier = ref.watch(selectedDateProvider.notifier);
     final showingMonth = ref.watch(showingDateTimeProvider).month;
-    final isToday = 
-        date?.day == today.day &&
+    final isToday = date?.day == today.day &&
         date?.month == today.month &&
         date?.year == today.year;
 
     return GestureDetector(
-      onTap: () {//これnotifierで管理する意味あるのかな
+      onTap: () {
+        //これnotifierで管理する意味あるのかな
         selectedDateNotifier.updateDate(date!).then((updatedDate) {
           showDialog<void>(
             context: context,
             builder: (BuildContext context) {
-                    return PageView.builder(
-                      controller: PageController(
-                        viewportFraction: 0.9,
-                        initialPage: 50,
-                      ),
-                      itemCount: 101,
-                      itemBuilder: (BuildContext context, int index) {
-                        final selectedDate = 
-                          updatedDate.add(Duration(days: index - 50));
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white,
-                          ),
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 100,
-                          ),
-                          child: ScheduleCarousel(selectedDate: selectedDate), 
-                        );
-                      },
-                    );
+              return PageView.builder(
+                controller: PageController(
+                  viewportFraction: 0.9,
+                  initialPage: 50,
+                ),
+                itemCount: 101,
+                itemBuilder: (BuildContext context, int index) {
+                  final selectedDate =
+                      updatedDate.add(Duration(days: index - 50));
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.white,
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 100,
+                    ),
+                    child: ScheduleCarousel(selectedDate: selectedDate),
+                  );
+                },
+              );
             },
           );
         });
@@ -61,7 +66,7 @@ class DateBox extends ConsumerWidget {
         aspectRatio: 1,
         child: Container(
           decoration: BoxDecoration(
-            color: isToday 
+            color: isToday
                 ? const Color.fromARGB(255, 108, 179, 237)
                 : Colors.transparent,
             shape: BoxShape.circle,
@@ -72,14 +77,14 @@ class DateBox extends ConsumerWidget {
               Text(
                 date!.day.toString(),
                 style: TextStyle(
-  color: showingMonth != date!.month
-      ? Colors.grey
-      : weekday == 6
-          ? Colors.blue
-          : weekday == 7
-              ? Colors.red
-              : Colors.black,
-),
+                  color: showingMonth != date!.month
+                      ? Colors.grey
+                      : weekday == 6
+                          ? Colors.blue
+                          : weekday == 7
+                              ? Colors.red
+                              : Colors.black,
+                ),
               ),
               if (isToday)
                 Container(

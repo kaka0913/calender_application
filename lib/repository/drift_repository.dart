@@ -2,12 +2,14 @@
 import 'dart:io';
 
 // Package imports:
-import 'package:calender_application/model/schedule_form_model.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+
+// Project imports:
+import 'package:calender_application/model/schedule_form_model.dart';
 
 part 'drift_repository.g.dart';
 
@@ -33,11 +35,14 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   int get schemaVersion => 1;
 
   Future<List<Schedule>> getSchedules(DateTime? time) {
-    return (select(schedules)..where((s) => 
-      s.startTime.year.equals(time?.year) &
-      s.startTime.month.equals(time?.month) &
-      s.startTime.day.equals(time?.day),
-    )).get();
+    return (select(schedules)
+          ..where(
+            (s) =>
+                s.startTime.year.equals(time?.year) &
+                s.startTime.month.equals(time?.month) &
+                s.startTime.day.equals(time?.day),
+          ))
+        .get();
   }
 
   //安全にデータを追加するためにScheduleFormクラスを使用
