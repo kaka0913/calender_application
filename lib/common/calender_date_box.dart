@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:calender_application/repository/provider/has_sckedule_provider.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,7 +28,14 @@ class DateBox extends ConsumerWidget {
     final showingMonth = ref.watch(showingDateTimeProvider).month;
     final isToday = date?.day == today.day &&
         date?.month == today.month &&
-        date?.year == today.year;
+        date?.year == today.year;   
+    final scheduleExistence = 
+          ref.watch(scheduleExistenceProvider(date!));
+    final hasAppointment = scheduleExistence.when(
+                data: (exists) => exists,
+                loading: () => false,
+                error: (_, __) => false,
+              );   
 
     return GestureDetector(
       onTap: () {
@@ -86,7 +94,7 @@ class DateBox extends ConsumerWidget {
                               : Colors.black,
                 ),
               ),
-              if (isToday)
+              if (hasAppointment)
                 Container(
                   width: 7,
                   height: 7,

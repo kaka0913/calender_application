@@ -74,12 +74,21 @@ class SckeduleDatabase extends _$SckeduleDatabase {
       ),
     );
   }
+
+  Future<bool> hasAppointmentOnDate(DateTime date) async {
+  final startOfDay = DateTime(date.year, date.month, date.day, 0.bitLength);
+  final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+  final queryRows = await (select(schedules)..where((t) 
+    => t.startTime.isBetweenValues(startOfDay, endOfDay),)).get();
+  return queryRows.isNotEmpty;
+  }
 }
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'db.sqlite'));
+    driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
     return NativeDatabase(file);
   });
 }
