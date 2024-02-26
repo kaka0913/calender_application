@@ -221,7 +221,11 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                             dateFormat: 'yyyy年  MM月  dd日 ',
                             onConfirm: (date, selectedIndex) {
                               setState(() {
-                                endDate = date;
+                                if (startDate.isAfter(date)) {
+                                  endDate = startDate;
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );
@@ -240,7 +244,12 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                             minuteDivider: 15, // 15分刻みに設定
                             onConfirm: (date, selectedIndex) {
                               setState(() {
-                                endDate = date;
+                                if (date.isBefore(startDate)) {
+                                  endDate = startDate
+                                    .add(const Duration(hours: 1));
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );

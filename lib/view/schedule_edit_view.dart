@@ -21,8 +21,8 @@ class ScheduleEditForm extends ConsumerStatefulWidget {
 
 class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   bool _allDay = false;
-  late DateTime? startDate;
-  late DateTime? endDate;
+  late DateTime startDate;
+  late DateTime endDate;
 
   @override
     void initState() {
@@ -149,8 +149,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     child: ListTile(
                       title: Text(
                         '開始                            ${_allDay 
-                        ? DateFormat('        yyyy-MM-dd').format(startDate!) 
-                        : DateFormat('yyyy-MM-dd HH:mm').format(startDate!)}',
+                        ? DateFormat('        yyyy-MM-dd').format(startDate) 
+                        : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙
@@ -203,8 +203,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     child: ListTile(
                       title: Text(
                         '終了                            ${_allDay 
-                        ? DateFormat('        yyyy-MM-dd').format(endDate!) 
-                        : DateFormat('yyyy-MM-dd HH:mm').format(endDate!)}',
+                        ? DateFormat('        yyyy-MM-dd').format(endDate) 
+                        : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙
@@ -222,7 +222,11 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             dateFormat: 'yyyy年  MM月  dd日 ',
                             onConfirm: (date, selectedIndex) {
                               setState(() {
-                                endDate = date;
+                                if (startDate.isAfter(date)) {
+                                  endDate = startDate;
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );
@@ -241,7 +245,12 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             minuteDivider: 15, // 15分刻みに設定
                             onConfirm: (date, selectedIndex) {
                               setState(() {
-                                endDate = date;
+                                if (date.isBefore(startDate)) {
+                                  endDate = startDate
+                                    .add(const Duration(hours: 1));
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );
