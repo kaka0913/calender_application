@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,7 +11,8 @@ import 'package:intl/intl.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleEditForm extends ConsumerStatefulWidget {
-  const ScheduleEditForm({super.key});
+  const ScheduleEditForm({required this.schedule, super.key});
+  final Schedule schedule;
 
   @override
   ScheduleFormState createState() => ScheduleFormState();
@@ -18,13 +20,22 @@ class ScheduleEditForm extends ConsumerStatefulWidget {
 
 class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   bool _allDay = false;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(const Duration(hours: 1));
+  late DateTime? startDate;
+  late DateTime? endDate;
+
+  @override
+    void initState() {
+      super.initState();
+      _allDay = widget.schedule.isAllDay;
+      startDate = widget.schedule.startTime;
+      endDate = widget.schedule.endTime;
+  }
 
   @override
   Widget build(BuildContext context) {
     final bottonState = ref.watch(buttonStateProvider);
-    final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
+    final bottonStateNotifier = 
+      ref.watch(buttonStateProvider.notifier)..setdata(widget.schedule);
 
     return Scaffold(
       appBar: AppBar(
@@ -136,8 +147,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     child: ListTile(
                       title: Text(
                         '開始                            ${_allDay 
-                        ? DateFormat('        yyyy-MM-dd').format(startDate) 
-                        : DateFormat('yyyy-MM-dd hh:mm').format(startDate)}',
+                        ? DateFormat('        yyyy-MM-dd').format(startDate!) 
+                        : DateFormat('yyyy-MM-dd hh:mm').format(startDate!)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙
@@ -190,8 +201,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     child: ListTile(
                       title: Text(
                         '終了                            ${_allDay 
-                        ? DateFormat('        yyyy-MM-dd').format(endDate) 
-                        : DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
+                        ? DateFormat('        yyyy-MM-dd').format(endDate!) 
+                        : DateFormat('yyyy-MM-dd hh:mm').format(endDate!)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,5 +17,10 @@ class ButtonState extends StateNotifier<bool> {
   void updateState() {
     state =
         titleController.text.isNotEmpty && contentController.text.isNotEmpty;
+  }
+
+  void setdata(Schedule schedule){//スケジュール編集画面にてコントローラに初期値をセット
+    titleController.text = schedule.title;
+    contentController.text = schedule.content;
   }
 }
