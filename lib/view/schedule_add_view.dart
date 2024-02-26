@@ -13,7 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleAddForm extends ConsumerStatefulWidget {
-  const ScheduleAddForm({super.key});
+  const ScheduleAddForm({required this.selectedDate, super.key});
+  final DateTime selectedDate;
 
   @override
   ScheduleFormState createState() => ScheduleFormState();
@@ -21,11 +22,26 @@ class ScheduleAddForm extends ConsumerStatefulWidget {
 
 class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
   bool _allDay = false;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(const Duration(hours: 1));
+  DateTime defaultTime = DateTime.now();
+  late DateTime startDate;
+  late DateTime endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    defaultTime = DateTime.now();
+    startDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+      defaultTime.add(const Duration(hours: 1)).hour,
+    );
+    endDate = startDate.add(const Duration(hours: 1));
+  }
 
   @override
   Widget build(BuildContext context) {
+
     final bottonState = ref.watch(buttonStateProvider);
     final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
     final database = ref.watch(driftDbProvider);
