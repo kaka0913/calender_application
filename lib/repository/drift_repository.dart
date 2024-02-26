@@ -76,11 +76,12 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   }
 
   Future<bool> hasAppointmentOnDate(DateTime date) async {
-  final startOfDay = DateTime(date.year, date.month, date.day, 0.bitLength);
-  final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
-  final queryRows = await (select(schedules)..where((t) 
-    => t.startTime.isBetweenValues(startOfDay, endOfDay),)).get();
-  return queryRows.isNotEmpty;
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    final queryRows = await (select(schedules)..where((t) 
+      => t.startTime.isBiggerOrEqualValue(startOfDay) & 
+         t.startTime.isSmallerOrEqualValue(endOfDay),)).get();
+    return queryRows.isNotEmpty;
   }
 }
 

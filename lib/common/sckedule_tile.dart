@@ -26,20 +26,32 @@ class ScheduleTile extends StatelessWidget {
           children: [
             Row(
               children: <Widget>[
-                Column(
-                  children: [
-                    Text(
-                      '${schedule.startTime.hour.toString().padLeft(2, '0')}:${
-                        schedule.startTime.minute.toString().padLeft(2, '0')}',
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                    Text(
-                      '${schedule.endTime.hour.toString().padLeft(2, '0')}:${
-                        schedule.endTime.minute.toString().padLeft(2, '0')}',
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
+                if (schedule.isAllDay)
+                  const Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          '終日',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Column(
+                    children: [
+                      Text(
+                        '${schedule.startTime.hour.toString().padLeft(2,'0')}:${
+                          schedule.startTime.minute.toString().padLeft(2,'0')}',
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                      Text(
+                        '${schedule.endTime.hour.toString().padLeft(2, '0')}:${
+                          schedule.endTime.minute.toString().padLeft(2, '0')}',
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8),
                   child: Container(
