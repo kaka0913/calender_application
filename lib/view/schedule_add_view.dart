@@ -289,23 +289,6 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(),
-                        foregroundColor: Colors.red,
-                        backgroundColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        // ここに削除処理を書く
-                      },
-                      child: const Text('この予定を削除'),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
