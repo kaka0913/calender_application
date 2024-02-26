@@ -13,14 +13,14 @@ class Schedule extends DataClass implements Insertable<Schedule> {
   final DateTime startTime;
   final DateTime endTime;
   final bool isAllDay;
-  final String? content;
+  final String content;
   Schedule(
       {required this.id,
       required this.title,
       required this.startTime,
       required this.endTime,
       required this.isAllDay,
-      this.content});
+      required this.content});
   factory Schedule.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Schedule(
@@ -35,7 +35,7 @@ class Schedule extends DataClass implements Insertable<Schedule> {
       isAllDay: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_all_day'])!,
       content: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}content']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
     );
   }
   @override
@@ -46,9 +46,7 @@ class Schedule extends DataClass implements Insertable<Schedule> {
     map['start_time'] = Variable<DateTime>(startTime);
     map['end_time'] = Variable<DateTime>(endTime);
     map['is_all_day'] = Variable<bool>(isAllDay);
-    if (!nullToAbsent || content != null) {
-      map['content'] = Variable<String?>(content);
-    }
+    map['content'] = Variable<String>(content);
     return map;
   }
 
@@ -59,9 +57,7 @@ class Schedule extends DataClass implements Insertable<Schedule> {
       startTime: Value(startTime),
       endTime: Value(endTime),
       isAllDay: Value(isAllDay),
-      content: content == null && nullToAbsent
-          ? const Value.absent()
-          : Value(content),
+      content: Value(content),
     );
   }
 
@@ -74,7 +70,7 @@ class Schedule extends DataClass implements Insertable<Schedule> {
       startTime: serializer.fromJson<DateTime>(json['startTime']),
       endTime: serializer.fromJson<DateTime>(json['endTime']),
       isAllDay: serializer.fromJson<bool>(json['isAllDay']),
-      content: serializer.fromJson<String?>(json['content']),
+      content: serializer.fromJson<String>(json['content']),
     );
   }
   @override
@@ -86,7 +82,7 @@ class Schedule extends DataClass implements Insertable<Schedule> {
       'startTime': serializer.toJson<DateTime>(startTime),
       'endTime': serializer.toJson<DateTime>(endTime),
       'isAllDay': serializer.toJson<bool>(isAllDay),
-      'content': serializer.toJson<String?>(content),
+      'content': serializer.toJson<String>(content),
     };
   }
 
@@ -139,7 +135,7 @@ class SchedulesCompanion extends UpdateCompanion<Schedule> {
   final Value<DateTime> startTime;
   final Value<DateTime> endTime;
   final Value<bool> isAllDay;
-  final Value<String?> content;
+  final Value<String> content;
   const SchedulesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -154,18 +150,19 @@ class SchedulesCompanion extends UpdateCompanion<Schedule> {
     required DateTime startTime,
     required DateTime endTime,
     required bool isAllDay,
-    this.content = const Value.absent(),
+    required String content,
   })  : title = Value(title),
         startTime = Value(startTime),
         endTime = Value(endTime),
-        isAllDay = Value(isAllDay);
+        isAllDay = Value(isAllDay),
+        content = Value(content);
   static Insertable<Schedule> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<DateTime>? startTime,
     Expression<DateTime>? endTime,
     Expression<bool>? isAllDay,
-    Expression<String?>? content,
+    Expression<String>? content,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -183,7 +180,7 @@ class SchedulesCompanion extends UpdateCompanion<Schedule> {
       Value<DateTime>? startTime,
       Value<DateTime>? endTime,
       Value<bool>? isAllDay,
-      Value<String?>? content}) {
+      Value<String>? content}) {
     return SchedulesCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
@@ -213,7 +210,7 @@ class SchedulesCompanion extends UpdateCompanion<Schedule> {
       map['is_all_day'] = Variable<bool>(isAllDay.value);
     }
     if (content.present) {
-      map['content'] = Variable<String?>(content.value);
+      map['content'] = Variable<String>(content.value);
     }
     return map;
   }
@@ -270,8 +267,8 @@ class $SchedulesTable extends Schedules
   final VerificationMeta _contentMeta = const VerificationMeta('content');
   @override
   late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
-      'content', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'content', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [id, title, startTime, endTime, isAllDay, content];
@@ -314,6 +311,8 @@ class $SchedulesTable extends Schedules
     if (data.containsKey('content')) {
       context.handle(_contentMeta,
           content.isAcceptableOrUnknown(data['content']!, _contentMeta));
+    } else if (isInserting) {
+      context.missing(_contentMeta);
     }
     return context;
   }

@@ -24,7 +24,7 @@ class Schedules extends Table {
   DateTimeColumn get startTime => dateTime()();
   DateTimeColumn get endTime => dateTime()();
   BoolColumn get isAllDay => boolean()();
-  TextColumn get content => text().nullable()();
+  TextColumn get content => text()();
 }
 
 @DriftDatabase(tables: [Schedules])
