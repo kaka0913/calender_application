@@ -34,16 +34,17 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   @override
   int get schemaVersion => 1;
 
-  Future<List<Schedule>> getSchedules(DateTime time) {
-    return (select(schedules)
-          ..where(
-            (s) =>
-                s.startTime.year.equals(time.year) &
-                s.startTime.month.equals(time.month) &
-                s.startTime.day.equals(time.day),
-          ))
-        .get();
-  }
+  Future<List<Schedule>> getSchedules(DateTime date) {
+  final startOfDay = DateTime(date.year, date.month, date.day);
+  final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+  return (select(schedules)
+        ..where(
+          (s) =>
+              s.startTime.isBiggerOrEqualValue(startOfDay) &
+              s.startTime.isSmallerOrEqualValue(endOfDay),
+        ))
+      .get();
+}
 
   //安全にデータを追加するためにScheduleFormクラスを使用
   Future<int> addSchedule(ScheduleForm schedule) {
