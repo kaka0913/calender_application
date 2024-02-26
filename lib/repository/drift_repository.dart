@@ -34,13 +34,13 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   @override
   int get schemaVersion => 1;
 
-  Future<List<Schedule>> getSchedules(DateTime? time) {
+  Future<List<Schedule>> getSchedules(DateTime time) {
     return (select(schedules)
           ..where(
             (s) =>
-                s.startTime.year.equals(time?.year) &
-                s.startTime.month.equals(time?.month) &
-                s.startTime.day.equals(time?.day),
+                s.startTime.year.equals(time.year) &
+                s.startTime.month.equals(time.month) &
+                s.startTime.day.equals(time.day),
           ))
         .get();
   }

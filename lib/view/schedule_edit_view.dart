@@ -337,12 +337,14 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                       '削除',
                                       style: TextStyle(color: Colors.blue),
                                     ),
-                                    onPressed: () {
-                                      database.
+                                    onPressed: () async{
+                                      await database.
                                         deleteSchedule(widget.schedule.id);
                                       ref.invalidate(driftDbProvider);
-                                      Navigator.of(context).pop(); // ダイアログを閉じる
-                                      Navigator.of(context).pop(); // 予定詳細画面を閉じる
+                                      if(mounted){
+                                        Navigator.of(context).pop(); // ダイアログ
+                                        Navigator.of(context).pop(); // 予定詳細画面
+                                      }
                                     },
                                   ),
                                 ],
