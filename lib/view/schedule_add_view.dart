@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:calender_application/model/schedule_form_model.dart';
-import 'package:calender_application/repository/drift_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
+import 'package:calender_application/model/schedule_form_model.dart';
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleAddForm extends ConsumerStatefulWidget {
@@ -41,7 +41,6 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
 
   @override
   Widget build(BuildContext context) {
-
     final bottonState = ref.watch(buttonStateProvider);
     final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
     final database = ref.watch(driftDbProvider);
@@ -52,49 +51,49 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         backgroundColor: Colors.blue,
         title: Row(
           children: [
-GestureDetector(
-  onTap: () {
-    if (bottonStateNotifier.titleController.text.isNotEmpty 
-        || bottonStateNotifier.contentController.text.isNotEmpty) {
-      showCupertinoModalPopup<void>(
-        context: context,
-        builder: (BuildContext context) => CupertinoActionSheet(
-          actions: <Widget>[
-            CupertinoActionSheetAction(
-              child: const Text(
-                '編集を破棄',
-                style: TextStyle(
-                  color: Colors.blue,
-                ),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
+            GestureDetector(
+              onTap: () {
+                if (bottonStateNotifier.titleController.text.isNotEmpty ||
+                    bottonStateNotifier.contentController.text.isNotEmpty) {
+                  showCupertinoModalPopup<void>(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoActionSheet(
+                      actions: <Widget>[
+                        CupertinoActionSheetAction(
+                          child: const Text(
+                            '編集を破棄',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                      cancelButton: CupertinoActionSheetAction(
+                        child: const Text(
+                          'キャンセル',
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  );
+                } else {
+                  Navigator.pop(context);
+                }
               },
-            ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            child: const  Text(
-                'キャンセル',
-                style: TextStyle(
-                  color: Colors.blue,
-                ),
+              child: const Icon(
+                Icons.clear,
+                color: Colors.white,
               ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-      );
-    } else {
-      Navigator.pop(context);
-    }
-  },
-  child: const Icon(
-    Icons.clear,
-    color: Colors.white,
-  ),
-),
+            ),
             const Padding(
               padding: EdgeInsets.only(left: 100, right: 40),
               child: Text(
@@ -106,7 +105,7 @@ GestureDetector(
             ),
             ElevatedButton(
               onPressed: (bottonState == true)
-                  ? () async{
+                  ? () async {
                       Navigator.pop(context);
                       await database.addSchedule(
                         ScheduleForm(
@@ -122,7 +121,8 @@ GestureDetector(
                   : null,
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 216, 216, 216),),
+                  const Color.fromARGB(255, 216, 216, 216),
+                ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   const RoundedRectangleBorder(),
                 ),
@@ -296,8 +296,8 @@ GestureDetector(
                             onConfirm: (date, selectedIndex) {
                               setState(() {
                                 if (date.isBefore(startDate)) {
-                                  endDate = startDate
-                                    .add(const Duration(hours: 1));
+                                  endDate =
+                                      startDate.add(const Duration(hours: 1));
                                 } else {
                                   endDate = date;
                                 }

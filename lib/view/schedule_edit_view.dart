@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:calender_application/repository/drift_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleEditForm extends ConsumerStatefulWidget {
@@ -25,19 +25,19 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   late DateTime endDate;
 
   @override
-    void initState() {
-      super.initState();
-      _allDay = widget.schedule.isAllDay;
-      startDate = widget.schedule.startTime;
-      endDate = widget.schedule.endTime;
+  void initState() {
+    super.initState();
+    _allDay = widget.schedule.isAllDay;
+    startDate = widget.schedule.startTime;
+    endDate = widget.schedule.endTime;
   }
 
   @override
   Widget build(BuildContext context) {
     final database = ref.watch(driftDbProvider);
     final bottonState = ref.watch(buttonStateProvider);
-    final bottonStateNotifier = 
-      ref.watch(buttonStateProvider.notifier)..setdata(widget.schedule);
+    final bottonStateNotifier = ref.watch(buttonStateProvider.notifier)
+      ..setdata(widget.schedule);
 
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +72,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                   : null,
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 216, 216, 216),),
+                  const Color.fromARGB(255, 216, 216, 216),
+                ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   const RoundedRectangleBorder(),
                 ),
@@ -246,8 +247,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             onConfirm: (date, selectedIndex) {
                               setState(() {
                                 if (date.isBefore(startDate)) {
-                                  endDate = startDate
-                                    .add(const Duration(hours: 1));
+                                  endDate =
+                                      startDate.add(const Duration(hours: 1));
                                 } else {
                                   endDate = date;
                                 }
@@ -309,49 +310,49 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         foregroundColor: Colors.red,
                         backgroundColor: Colors.white,
                       ),
-                        onPressed: () {
-                          showCupertinoDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CupertinoAlertDialog(
-                                title: const Text(
-                                  '予定の削除',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                content: const Text(
-                                  '本当にこの日の予定を削除しますか？',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                actions: <Widget>[
-                                  CupertinoDialogAction(
-                                    child: const Text(
-                                      'キャンセル',
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
+                      onPressed: () {
+                        showCupertinoDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CupertinoAlertDialog(
+                              title: const Text(
+                                '予定の削除',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              content: const Text(
+                                '本当にこの日の予定を削除しますか？',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              actions: <Widget>[
+                                CupertinoDialogAction(
+                                  child: const Text(
+                                    'キャンセル',
+                                    style: TextStyle(color: Colors.blue),
                                   ),
-                                  CupertinoDialogAction(
-                                    child: const Text(
-                                      '削除',
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                    onPressed: () async{
-                                      await database.
-                                        deleteSchedule(widget.schedule.id);
-                                      ref.invalidate(driftDbProvider);
-                                      if(mounted){
-                                        Navigator.of(context).pop(); // ダイアログ
-                                        Navigator.of(context).pop(); // 予定詳細画面
-                                      }
-                                    },
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                CupertinoDialogAction(
+                                  child: const Text(
+                                    '削除',
+                                    style: TextStyle(color: Colors.blue),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        },
+                                  onPressed: () async {
+                                    await database
+                                        .deleteSchedule(widget.schedule.id);
+                                    ref.invalidate(driftDbProvider);
+                                    if (mounted) {
+                                      Navigator.of(context).pop(); // ダイアログ
+                                      Navigator.of(context).pop(); // 予定詳細画面
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       child: const Text('この予定を削除'),
                     ),
                   ),

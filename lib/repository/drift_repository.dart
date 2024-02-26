@@ -35,16 +35,16 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   int get schemaVersion => 1;
 
   Future<List<Schedule>> getSchedules(DateTime date) {
-  final startOfDay = DateTime(date.year, date.month, date.day);
-  final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
-  return (select(schedules)
-        ..where(
-          (s) =>
-              s.startTime.isBiggerOrEqualValue(startOfDay) &
-              s.startTime.isSmallerOrEqualValue(endOfDay),
-        ))
-      .get();
-}
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    return (select(schedules)
+          ..where(
+            (s) =>
+                s.startTime.isBiggerOrEqualValue(startOfDay) &
+                s.startTime.isSmallerOrEqualValue(endOfDay),
+          ))
+        .get();
+  }
 
   //安全にデータを追加するためにScheduleFormクラスを使用
   Future<int> addSchedule(ScheduleForm schedule) {
@@ -79,9 +79,13 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   Future<bool> hasAppointmentOnDate(DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
-    final queryRows = await (select(schedules)..where((t) 
-      => t.startTime.isBiggerOrEqualValue(startOfDay) & 
-         t.startTime.isSmallerOrEqualValue(endOfDay),)).get();
+    final queryRows = await (select(schedules)
+          ..where(
+            (t) =>
+                t.startTime.isBiggerOrEqualValue(startOfDay) &
+                t.startTime.isSmallerOrEqualValue(endOfDay),
+          ))
+        .get();
     return queryRows.isNotEmpty;
   }
 }
