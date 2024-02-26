@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:calender_application/model/schedule_form_model.dart';
 import 'package:calender_application/repository/drift_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -35,15 +36,49 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         backgroundColor: Colors.blue,
         title: Row(
           children: [
-            GestureDetector(
-              onTap: () {
+GestureDetector(
+  onTap: () {
+    if (bottonStateNotifier.titleController.text.isNotEmpty 
+        || bottonStateNotifier.contentController.text.isNotEmpty) {
+      showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => CupertinoActionSheet(
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: const Text(
+                '編集を破棄',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: const Icon(
-                Icons.clear,
-                color: Colors.white,
-              ),
             ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            child: const  Text(
+                'キャンセル',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      );
+    } else {
+      Navigator.pop(context);
+    }
+  },
+  child: const Icon(
+    Icons.clear,
+    color: Colors.white,
+  ),
+),
             const Padding(
               padding: EdgeInsets.only(left: 100, right: 40),
               child: Text(
