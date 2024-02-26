@@ -39,7 +39,6 @@ class DateBox extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        //これnotifierで管理する意味あるのかな
         selectedDateNotifier.updateDate(date!).then((updatedDate) {
           showDialog<void>(
             context: context,

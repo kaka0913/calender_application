@@ -44,7 +44,8 @@ class ScheduleCarousel extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (context) => const ScheduleAddForm(),
+                          builder: (context) => 
+                           ScheduleAddForm(selectedDate: selectedDate),
                         ),
                       );
                     },
