@@ -65,9 +65,21 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
             ),
             ElevatedButton(
               onPressed: (bottonState == true)
-                  ? () {
-                      Navigator.pop(context);
-                      //データベースに保存する処理を書く
+                  ? () async {
+                      await database.updateSchedule(
+                        Schedule(
+                          id: widget.schedule.id,
+                          title: bottonStateNotifier.titleController.text,
+                          startTime: startDate,
+                          endTime: endDate,
+                          isAllDay: _allDay,
+                          content: bottonStateNotifier.contentController.text,
+                        ),
+                      );
+                      ref.invalidate(driftDbProvider);
+                      if(mounted){
+                        Navigator.pop(context);
+                      }
                     }
                   : null,
               style: ButtonStyle(
@@ -119,7 +131,17 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             ),
                             border: InputBorder.none,
                           ),
-                          onSubmitted: (_) => bottonStateNotifier.updateState(),
+                          onChanged: (text) {
+                            if (widget.schedule.title != text) {
+                              bottonStateNotifier.updateState();
+                            }
+                          },
+                          onSubmitted: (text) {
+                            bottonStateNotifier.titleController.text = text;
+                            if (widget.schedule.title != text) {
+                               bottonStateNotifier.updateState();
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -154,7 +176,6 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
                       ),
                       onTap: () {
-                        //機能的には満たせているが、見た目が微妙
                         if (_allDay) {
                           //開始 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
@@ -167,7 +188,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             locale: DateTimePickerLocale.jp,
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'yyyy年  MM月  dd日 ',
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
                               });
@@ -186,7 +209,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'MM月  dd日 HH:mm',
                             minuteDivider: 15, // 15分刻みに設定
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
                               });
@@ -221,7 +246,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             locale: DateTimePickerLocale.jp,
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'yyyy年  MM月  dd日 ',
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
                                 if (startDate.isAfter(date)) {
                                   endDate = startDate;
@@ -244,7 +271,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'MM月dd日 HH:mm',
                             minuteDivider: 15, // 15分刻みに設定
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
                                 if (date.isBefore(startDate)) {
                                   endDate =
@@ -291,8 +320,17 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               ),
                             ),
                             maxLines: null,
-                            onSubmitted: (_) =>
-                                bottonStateNotifier.updateState(),
+                            onChanged: (text) {
+                              if (widget.schedule.title != text) {
+                                bottonStateNotifier.updateState();
+                              }
+                            },
+                            onSubmitted: (text) {
+                              bottonStateNotifier.contentController.text = text;
+                              if (widget.schedule.content != text) {
+                                  bottonStateNotifier.updateState();
+                              }
+                            },
                             textInputAction: TextInputAction.done,
                           ),
                         ),
