@@ -106,7 +106,6 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
             ElevatedButton(
               onPressed: (bottonState == true)
                   ? () async {
-                      Navigator.pop(context);
                       await database.addSchedule(
                         ScheduleForm(
                           title: bottonStateNotifier.titleController.text,
@@ -117,6 +116,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                         ),
                       );
                       ref.invalidate(driftDbProvider);
+                      if(mounted){
+                        Navigator.pop(context);
+                      }
                     }
                   : null,
               style: ButtonStyle(
