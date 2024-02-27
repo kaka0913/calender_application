@@ -96,8 +96,9 @@ class DateBox extends ConsumerWidget {
                 Container(
                   width: 7,
                   height: 7,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
+                  decoration: BoxDecoration(
+                    color: showingMonth != date!.month
+                      ?const Color.fromARGB(255, 167, 163, 163) : Colors.black,
                     shape: BoxShape.circle,
                   ),
                 ),
