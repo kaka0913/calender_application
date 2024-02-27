@@ -132,13 +132,13 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             border: InputBorder.none,
                           ),
                           onChanged: (text) {
-                            if (widget.schedule.title != text) {
+                            if (widget.schedule.title != text || text.isEmpty) {
                               bottonStateNotifier.updateState();
                             }
                           },
                           onSubmitted: (text) {
                             bottonStateNotifier.titleController.text = text;
-                            if (widget.schedule.title != text) {
+                            if (widget.schedule.title != text || text.isEmpty) {
                                bottonStateNotifier.updateState();
                             }
                           },
@@ -322,13 +322,15 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             ),
                             maxLines: null,
                             onChanged: (text) {
-                              if (widget.schedule.title != text) {
+                              if (widget.schedule.title != text 
+                               || text.isEmpty){
                                 bottonStateNotifier.updateState();
                               }
                             },
                             onSubmitted: (text) {
                               bottonStateNotifier.contentController.text = text;
-                              if (widget.schedule.content != text) {
+                              if (widget.schedule.content != text 
+                               || text.isEmpty) {
                                   bottonStateNotifier.updateState();
                               }
                             },
