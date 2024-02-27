@@ -24,7 +24,7 @@ class Schedules extends Table {
   DateTimeColumn get startTime => dateTime()();
   DateTimeColumn get endTime => dateTime()();
   BoolColumn get isAllDay => boolean()();
-  TextColumn get content => text().nullable()();
+  TextColumn get content => text()();
 }
 
 @DriftDatabase(tables: [Schedules])
@@ -34,13 +34,14 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   @override
   int get schemaVersion => 1;
 
-  Future<List<Schedule>> getSchedules(DateTime? time) {
+  Future<List<Schedule>> getSchedules(DateTime date) {
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
     return (select(schedules)
           ..where(
             (s) =>
-                s.startTime.year.equals(time?.year) &
-                s.startTime.month.equals(time?.month) &
-                s.startTime.day.equals(time?.day),
+                s.startTime.isBiggerOrEqualValue(startOfDay) &
+                s.startTime.isSmallerOrEqualValue(endOfDay),
           ))
         .get();
   }
@@ -76,11 +77,16 @@ class SckeduleDatabase extends _$SckeduleDatabase {
   }
 
   Future<bool> hasAppointmentOnDate(DateTime date) async {
-  final startOfDay = DateTime(date.year, date.month, date.day, 0.bitLength);
-  final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
-  final queryRows = await (select(schedules)..where((t) 
-    => t.startTime.isBetweenValues(startOfDay, endOfDay),)).get();
-  return queryRows.isNotEmpty;
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    final queryRows = await (select(schedules)
+          ..where(
+            (t) =>
+                t.startTime.isBiggerOrEqualValue(startOfDay) &
+                t.startTime.isSmallerOrEqualValue(endOfDay),
+          ))
+        .get();
+    return queryRows.isNotEmpty;
   }
 }
 

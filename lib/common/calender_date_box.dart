@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:calender_application/repository/provider/has_sckedule_provider.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -7,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:calender_application/common/schedule_carousel.dart';
+import 'package:calender_application/repository/provider/has_sckedule_provider.dart';
 import 'package:calender_application/repository/provider/selected_day_provider.dart';
 
 class DateBox extends ConsumerWidget {
@@ -28,18 +28,16 @@ class DateBox extends ConsumerWidget {
     final showingMonth = ref.watch(showingDateTimeProvider).month;
     final isToday = date?.day == today.day &&
         date?.month == today.month &&
-        date?.year == today.year;   
-    final scheduleExistence = 
-          ref.watch(scheduleExistenceProvider(date!));
+        date?.year == today.year;
+    final scheduleExistence = ref.watch(scheduleExistenceProvider(date!));
     final hasAppointment = scheduleExistence.when(
-                data: (exists) => exists,
-                loading: () => false,
-                error: (_, __) => false,
-              );   
+      data: (exists) => exists,
+      loading: () => false,
+      error: (_, __) => false,
+    );
 
     return GestureDetector(
       onTap: () {
-        //これnotifierで管理する意味あるのかな
         selectedDateNotifier.updateDate(date!).then((updatedDate) {
           showDialog<void>(
             context: context,
@@ -98,8 +96,9 @@ class DateBox extends ConsumerWidget {
                 Container(
                   width: 7,
                   height: 7,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
+                  decoration: BoxDecoration(
+                    color: showingMonth != date!.month
+                      ?const Color.fromARGB(255, 167, 163, 163) : Colors.black,
                     shape: BoxShape.circle,
                   ),
                 ),

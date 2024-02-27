@@ -1,6 +1,5 @@
 // Flutter imports:
-import 'package:calender_application/model/schedule_form_model.dart';
-import 'package:calender_application/repository/drift_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,10 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
+import 'package:calender_application/model/schedule_form_model.dart';
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleAddForm extends ConsumerStatefulWidget {
-  const ScheduleAddForm({super.key});
+  const ScheduleAddForm({required this.selectedDate, super.key});
+  final DateTime selectedDate;
 
   @override
   ScheduleFormState createState() => ScheduleFormState();
@@ -20,8 +22,22 @@ class ScheduleAddForm extends ConsumerStatefulWidget {
 
 class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
   bool _allDay = false;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(const Duration(hours: 1));
+  DateTime defaultTime = DateTime.now();
+  late DateTime startDate;
+  late DateTime endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    defaultTime = DateTime.now();
+    startDate = DateTime(
+      widget.selectedDate.year,
+      widget.selectedDate.month,
+      widget.selectedDate.day,
+      defaultTime.add(const Duration(hours: 1)).hour,
+    );
+    endDate = startDate.add(const Duration(hours: 1));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +53,41 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                if (bottonStateNotifier.titleController.text.isNotEmpty ||
+                    bottonStateNotifier.contentController.text.isNotEmpty) {
+                  showCupertinoModalPopup<void>(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoActionSheet(
+                      actions: <Widget>[
+                        CupertinoActionSheetAction(
+                          child: const Text(
+                            '編集を破棄',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                      cancelButton: CupertinoActionSheetAction(
+                        child: const Text(
+                          'キャンセル',
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  );
+                } else {
+                  Navigator.pop(context);
+                }
               },
               child: const Icon(
                 Icons.clear,
@@ -55,8 +105,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
             ),
             ElevatedButton(
               onPressed: (bottonState == true)
-                  ? () async{
-                      Navigator.pop(context);
+                  ? () async {
                       await database.addSchedule(
                         ScheduleForm(
                           title: bottonStateNotifier.titleController.text,
@@ -67,11 +116,15 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                         ),
                       );
                       ref.invalidate(driftDbProvider);
+                      if(mounted){
+                        Navigator.pop(context);
+                      }
                     }
                   : null,
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 216, 216, 216),),
+                  const Color.fromARGB(255, 216, 216, 216),
+                ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   const RoundedRectangleBorder(),
                 ),
@@ -221,7 +274,11 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                             dateFormat: 'yyyy年  MM月  dd日 ',
                             onConfirm: (date, selectedIndex) {
                               setState(() {
-                                endDate = date;
+                                if (startDate.isAfter(date)) {
+                                  endDate = startDate;
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );
@@ -240,7 +297,12 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                             minuteDivider: 15, // 15分刻みに設定
                             onConfirm: (date, selectedIndex) {
                               setState(() {
-                                endDate = date;
+                                if (date.isBefore(startDate)) {
+                                  endDate =
+                                      startDate.add(const Duration(hours: 1));
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );
@@ -286,23 +348,6 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(),
-                        foregroundColor: Colors.red,
-                        backgroundColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        // ここに削除処理を書く
-                      },
-                      child: const Text('この予定を削除'),
                     ),
                   ),
                 ),

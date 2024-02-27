@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -7,10 +8,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
+import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
 class ScheduleEditForm extends ConsumerStatefulWidget {
-  const ScheduleEditForm({super.key});
+  const ScheduleEditForm({required this.schedule, super.key});
+  final Schedule schedule;
 
   @override
   ScheduleFormState createState() => ScheduleFormState();
@@ -18,13 +21,23 @@ class ScheduleEditForm extends ConsumerStatefulWidget {
 
 class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   bool _allDay = false;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(const Duration(hours: 1));
+  late DateTime startDate;
+  late DateTime endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _allDay = widget.schedule.isAllDay;
+    startDate = widget.schedule.startTime;
+    endDate = widget.schedule.endTime;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final database = ref.watch(driftDbProvider);
     final bottonState = ref.watch(buttonStateProvider);
-    final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
+    final bottonStateNotifier = ref.watch(buttonStateProvider.notifier)
+      ..setdata(widget.schedule);
 
     return Scaffold(
       appBar: AppBar(
@@ -52,14 +65,27 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
             ),
             ElevatedButton(
               onPressed: (bottonState == true)
-                  ? () {
-                      Navigator.pop(context);
-                      //データベースに保存する処理を書く
+                  ? () async {
+                      await database.updateSchedule(
+                        Schedule(
+                          id: widget.schedule.id,
+                          title: bottonStateNotifier.titleController.text,
+                          startTime: startDate,
+                          endTime: endDate,
+                          isAllDay: _allDay,
+                          content: bottonStateNotifier.contentController.text,
+                        ),
+                      );
+                      ref.invalidate(driftDbProvider);
+                      if(mounted){
+                        Navigator.pop(context);
+                      }
                     }
                   : null,
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 216, 216, 216),),
+                  const Color.fromARGB(255, 216, 216, 216),
+                ),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   const RoundedRectangleBorder(),
                 ),
@@ -105,7 +131,17 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             ),
                             border: InputBorder.none,
                           ),
-                          onSubmitted: (_) => bottonStateNotifier.updateState(),
+                          onChanged: (text) {
+                            if (widget.schedule.title != text) {
+                              bottonStateNotifier.updateState();
+                            }
+                          },
+                          onSubmitted: (text) {
+                            bottonStateNotifier.titleController.text = text;
+                            if (widget.schedule.title != text) {
+                               bottonStateNotifier.updateState();
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -119,6 +155,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                       title: const Text('終日'),
                       value: _allDay,
                       onChanged: (bool value) {
+                        bottonStateNotifier.updateState();
                         setState(() {
                           _allDay = value;
                         });
@@ -137,10 +174,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                       title: Text(
                         '開始                            ${_allDay 
                         ? DateFormat('        yyyy-MM-dd').format(startDate) 
-                        : DateFormat('yyyy-MM-dd hh:mm').format(startDate)}',
+                        : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
                       ),
                       onTap: () {
-                        //機能的には満たせているが、見た目が微妙
                         if (_allDay) {
                           //開始 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
@@ -153,7 +189,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             locale: DateTimePickerLocale.jp,
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'yyyy年  MM月  dd日 ',
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
                               });
@@ -172,7 +210,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'MM月  dd日 HH:mm',
                             minuteDivider: 15, // 15分刻みに設定
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
                               });
@@ -191,7 +231,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                       title: Text(
                         '終了                            ${_allDay 
                         ? DateFormat('        yyyy-MM-dd').format(endDate) 
-                        : DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
+                        : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
                       ),
                       onTap: () {
                         //機能的には満たせているが、見た目が微妙
@@ -207,9 +247,15 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             locale: DateTimePickerLocale.jp,
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'yyyy年  MM月  dd日 ',
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
-                                endDate = date;
+                                if (startDate.isAfter(date)) {
+                                  endDate = startDate;
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );
@@ -226,9 +272,16 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'MM月dd日 HH:mm',
                             minuteDivider: 15, // 15分刻みに設定
-                            onConfirm: (date, selectedIndex) {
+                            onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                            onConfirm: (date, _) {
                               setState(() {
-                                endDate = date;
+                                if (date.isBefore(startDate)) {
+                                  endDate =
+                                      startDate.add(const Duration(hours: 1));
+                                } else {
+                                  endDate = date;
+                                }
                               });
                             },
                           );
@@ -268,8 +321,17 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               ),
                             ),
                             maxLines: null,
-                            onSubmitted: (_) =>
-                                bottonStateNotifier.updateState(),
+                            onChanged: (text) {
+                              if (widget.schedule.title != text) {
+                                bottonStateNotifier.updateState();
+                              }
+                            },
+                            onSubmitted: (text) {
+                              bottonStateNotifier.contentController.text = text;
+                              if (widget.schedule.content != text) {
+                                  bottonStateNotifier.updateState();
+                              }
+                            },
                             textInputAction: TextInputAction.done,
                           ),
                         ),
@@ -288,7 +350,47 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         backgroundColor: Colors.white,
                       ),
                       onPressed: () {
-                        // ここに削除処理を書く
+                        showCupertinoDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CupertinoAlertDialog(
+                              title: const Text(
+                                '予定の削除',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              content: const Text(
+                                '本当にこの日の予定を削除しますか？',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              actions: <Widget>[
+                                CupertinoDialogAction(
+                                  child: const Text(
+                                    'キャンセル',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                CupertinoDialogAction(
+                                  child: const Text(
+                                    '削除',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  onPressed: () async {
+                                    await database
+                                        .deleteSchedule(widget.schedule.id);
+                                    ref.invalidate(driftDbProvider);
+                                    if (mounted) {
+                                      Navigator.of(context).pop(); // ダイアログ
+                                      Navigator.of(context).pop(); // 予定詳細画面
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       child: const Text('この予定を削除'),
                     ),

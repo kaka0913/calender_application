@@ -15,7 +15,7 @@ class ScheduleCarousel extends ConsumerWidget {
     super.key,
   });
 
-  final DateTime? selectedDate;
+  final DateTime selectedDate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +34,7 @@ class ScheduleCarousel extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  '${selectedDate?.year}/${selectedDate?.month}/${selectedDate?.day}',
+                  '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
                   style: const TextStyle(fontSize: 18),
                 ),
                 Padding(
@@ -44,7 +44,8 @@ class ScheduleCarousel extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (context) => const ScheduleAddForm(),
+                          builder: (context) =>
+                              ScheduleAddForm(selectedDate: selectedDate),
                         ),
                       );
                     },
