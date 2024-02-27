@@ -132,13 +132,13 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             border: InputBorder.none,
                           ),
                           onChanged: (text) {
-                            if (widget.schedule.title != text) {
+                            if (widget.schedule.title != text || text.isEmpty) {
                               bottonStateNotifier.updateState();
                             }
                           },
                           onSubmitted: (text) {
                             bottonStateNotifier.titleController.text = text;
-                            if (widget.schedule.title != text) {
+                            if (widget.schedule.title != text || text.isEmpty) {
                                bottonStateNotifier.updateState();
                             }
                           },
@@ -234,7 +234,6 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
                       ),
                       onTap: () {
-                        //機能的には満たせているが、見た目が微妙
                         if (_allDay) {
                           //終了 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
@@ -322,13 +321,15 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             ),
                             maxLines: null,
                             onChanged: (text) {
-                              if (widget.schedule.title != text) {
+                              if (widget.schedule.title != text 
+                               || text.isEmpty){
                                 bottonStateNotifier.updateState();
                               }
                             },
                             onSubmitted: (text) {
                               bottonStateNotifier.contentController.text = text;
-                              if (widget.schedule.content != text) {
+                              if (widget.schedule.content != text 
+                               || text.isEmpty) {
                                   bottonStateNotifier.updateState();
                               }
                             },

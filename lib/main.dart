@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
-import 'package:calender_application/view/home_page.dart';
+import 'package:calender_application/view/home_page_view.dart';
 
 void main() {
   runApp(

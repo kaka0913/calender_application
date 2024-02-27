@@ -40,8 +40,8 @@ class SckeduleDatabase extends _$SckeduleDatabase {
     return (select(schedules)
           ..where(
             (s) =>
-                s.startTime.isBiggerOrEqualValue(startOfDay) &
-                s.startTime.isSmallerOrEqualValue(endOfDay),
+                s.startTime.isSmallerOrEqualValue(endOfDay) &
+                s.endTime.isBiggerOrEqualValue(startOfDay),
           ))
         .get();
   }
