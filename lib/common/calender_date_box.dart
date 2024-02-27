@@ -36,13 +36,15 @@ class DateBox extends ConsumerWidget {
       error: (_, __) => false,
     );
 
-    return GestureDetector(//DateBoxを押した際の挙動
+    return GestureDetector(
+      //DateBoxを押した際の挙動
       onTap: () {
         selectedDateNotifier.updateDate(date!).then((updatedDate) {
           showDialog<void>(
             context: context,
             builder: (BuildContext context) {
-              return GestureDetector(//PageViewの欄外への挙動を検知
+              return GestureDetector(
+                //PageViewの欄外への挙動を検知
                 onTap: () => Navigator.of(context).pop(),
                 child: PageView.builder(
                   controller: PageController(
@@ -101,7 +103,8 @@ class DateBox extends ConsumerWidget {
                   height: 7,
                   decoration: BoxDecoration(
                     color: showingMonth != date!.month
-                      ?const Color.fromARGB(255, 167, 163, 163) : Colors.black,
+                        ? const Color.fromARGB(255, 167, 163, 163)
+                        : Colors.black,
                     shape: BoxShape.circle,
                   ),
                 ),

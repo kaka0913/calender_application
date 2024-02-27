@@ -77,7 +77,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         ),
                       );
                       ref.invalidate(driftDbProvider);
-                      if(mounted){
+                      if (mounted) {
                         Navigator.pop(context);
                       }
                     }
@@ -139,7 +139,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           onSubmitted: (text) {
                             bottonStateNotifier.titleController.text = text;
                             if (widget.schedule.title != text || text.isEmpty) {
-                               bottonStateNotifier.updateState();
+                              bottonStateNotifier.updateState();
                             }
                           },
                         ),
@@ -190,7 +190,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'yyyy年  MM月  dd日 ',
                             onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
+                                bottonStateNotifier.updateState(),
                             onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
@@ -211,7 +211,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             dateFormat: 'MM月  dd日 HH:mm',
                             minuteDivider: 15, // 15分刻みに設定
                             onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
+                                bottonStateNotifier.updateState(),
                             onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
@@ -247,7 +247,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             pickerMode: DateTimePickerMode.datetime,
                             dateFormat: 'yyyy年  MM月  dd日 ',
                             onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
+                                bottonStateNotifier.updateState(),
                             onConfirm: (date, _) {
                               setState(() {
                                 if (startDate.isAfter(date)) {
@@ -272,7 +272,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             dateFormat: 'MM月dd日 HH:mm',
                             minuteDivider: 15, // 15分刻みに設定
                             onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
+                                bottonStateNotifier.updateState(),
                             onConfirm: (date, _) {
                               setState(() {
                                 if (date.isBefore(startDate)) {
@@ -321,16 +321,16 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             ),
                             maxLines: null,
                             onChanged: (text) {
-                              if (widget.schedule.title != text 
-                               || text.isEmpty){
+                              if (widget.schedule.title != text ||
+                                  text.isEmpty) {
                                 bottonStateNotifier.updateState();
                               }
                             },
                             onSubmitted: (text) {
                               bottonStateNotifier.contentController.text = text;
-                              if (widget.schedule.content != text 
-                               || text.isEmpty) {
-                                  bottonStateNotifier.updateState();
+                              if (widget.schedule.content != text ||
+                                  text.isEmpty) {
+                                bottonStateNotifier.updateState();
                               }
                             },
                             textInputAction: TextInputAction.done,

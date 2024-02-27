@@ -116,7 +116,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                         ),
                       );
                       ref.invalidate(driftDbProvider);
-                      if(mounted){
+                      if (mounted) {
                         Navigator.pop(context);
                       }
                     }

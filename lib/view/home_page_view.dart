@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:calender_application/common/calender_controller.dart';
 import 'package:calender_application/common/calender_widget.dart';
 import 'package:calender_application/repository/provider/selected_day_provider.dart';
-import 'package:calender_application/common/calender_controller.dart';
 
 final previousPageProvider = StateProvider<int>((ref) => 50);
 

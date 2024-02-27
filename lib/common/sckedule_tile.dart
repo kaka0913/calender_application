@@ -1,9 +1,9 @@
 // Flutter imports:
-import 'package:calender_application/view/schedule_edit_view.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:calender_application/repository/drift_repository.dart';
+import 'package:calender_application/view/schedule_edit_view.dart';
 
 class ScheduleTile extends StatelessWidget {
   const ScheduleTile({required this.schedule, super.key});
@@ -16,8 +16,9 @@ class ScheduleTile extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute<Widget>(builder: (context) 
-            => ScheduleEditForm(schedule: schedule),),
+          MaterialPageRoute<Widget>(
+            builder: (context) => ScheduleEditForm(schedule: schedule),
+          ),
         );
       },
       child: Padding(

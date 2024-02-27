@@ -63,12 +63,16 @@ class Calendar extends HookConsumerWidget {
                 week.reversed.takeWhile((day) => day == null).length;
 
             return WeekRow(
-              week.asMap()
+              week
+                  .asMap()
                   .map<int, DateTime>((index, day) {
                     DateTime date;
                     if (day != null) {
                       date = DateTime(
-                          showingDateTime.year, showingDateTime.month, day,);
+                        showingDateTime.year,
+                        showingDateTime.month,
+                        day,
+                      );
                     } else {
                       if (isStartOfWeek && index < nullCountStart) {
                         final previousMonth = showingDateTime.month - 1;
