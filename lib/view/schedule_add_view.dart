@@ -205,7 +205,6 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                         : DateFormat('yyyy-MM-dd hh:mm').format(startDate)}',
                       ),
                       onTap: () {
-                        //機能的には満たせているが、見た目が微妙
                         if (_allDay) {
                           //開始 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
@@ -259,7 +258,6 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                         : DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
                       ),
                       onTap: () {
-                        //機能的には満たせているが、見た目が微妙
                         if (_allDay) {
                           //終了 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
