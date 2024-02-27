@@ -155,6 +155,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                       title: const Text('終日'),
                       value: _allDay,
                       onChanged: (bool value) {
+                        bottonStateNotifier.updateState();
                         setState(() {
                           _allDay = value;
                         });
