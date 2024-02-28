@@ -47,7 +47,40 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
           children: [
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                if (bottonState) {//変更されている場合を示すことができるので流用
+                  showCupertinoModalPopup<void>(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoActionSheet(
+                      actions: <Widget>[
+                        CupertinoActionSheetAction(
+                          child: const Text(
+                            '編集を破棄',
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                      cancelButton: CupertinoActionSheetAction(
+                        child: const Text(
+                          'キャンセル',
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  );
+                } else {
+                  Navigator.pop(context);
+                }
               },
               child: const Icon(
                 Icons.clear,
@@ -194,6 +227,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
+                                if (endDate.isBefore(date)) {
+                                  endDate = date.add(const Duration(hours: 1));
+                                }
                               });
                             },
                           );
@@ -215,6 +251,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             onConfirm: (date, _) {
                               setState(() {
                                 startDate = date;
+                                if (endDate.isBefore(date)) {
+                                  endDate = date.add(const Duration(hours: 1));
+                                }
                               });
                             },
                           );
@@ -238,8 +277,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           //終了 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
                             context,
-                            minDateTime: DateTime.now()
-                                .subtract(const Duration(days: 365)),
+                            minDateTime: startDate,
                             maxDateTime:
                                 DateTime.now().add(const Duration(days: 365)),
                             initialDateTime: endDate,
@@ -262,8 +300,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           //終了 月日時分
                           DatePicker.showDatePicker(
                             context,
-                            minDateTime: DateTime.now()
-                                .subtract(const Duration(days: 365)),
+                            minDateTime: startDate,
                             maxDateTime:
                                 DateTime.now().add(const Duration(days: 365)),
                             initialDateTime: endDate,

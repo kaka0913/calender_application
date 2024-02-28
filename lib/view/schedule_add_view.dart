@@ -202,7 +202,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                       title: Text(
                         '開始                            ${_allDay 
                         ? DateFormat('        yyyy-MM-dd').format(startDate) 
-                        : DateFormat('yyyy-MM-dd hh:mm').format(startDate)}',
+                        : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
                       ),
                       onTap: () {
                         if (_allDay) {
@@ -220,6 +220,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                             onConfirm: (date, selectedIndex) {
                               setState(() {
                                 startDate = date;
+                                if (endDate.isBefore(date)) {
+                                  endDate = date.add(const Duration(hours: 1)); 
+                                }
                               });
                             },
                           );
@@ -239,6 +242,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                             onConfirm: (date, selectedIndex) {
                               setState(() {
                                 startDate = date;
+                                if (endDate.isBefore(date)) {
+                                  endDate = date.add(const Duration(hours: 1)); 
+                                }
                               });
                             },
                           );
@@ -255,15 +261,14 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                       title: Text(
                         '終了                            ${_allDay 
                         ? DateFormat('        yyyy-MM-dd').format(endDate) 
-                        : DateFormat('yyyy-MM-dd hh:mm').format(endDate)}',
+                        : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
                       ),
                       onTap: () {
                         if (_allDay) {
                           //終了 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
                             context,
-                            minDateTime: DateTime.now()
-                                .subtract(const Duration(days: 365)),
+                            minDateTime: startDate,
                             maxDateTime:
                                 DateTime.now().add(const Duration(days: 365)),
                             initialDateTime: endDate,
@@ -284,8 +289,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                           //終了 月日時分
                           DatePicker.showDatePicker(
                             context,
-                            minDateTime: DateTime.now()
-                                .subtract(const Duration(days: 365)),
+                            minDateTime: startDate,
                             maxDateTime:
                                 DateTime.now().add(const Duration(days: 365)),
                             initialDateTime: endDate,
