@@ -20,16 +20,20 @@ class ScheduleEditForm extends ConsumerStatefulWidget {
 }
 
 class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
-  bool _allDay = false;
+  bool allDay = false;
   late DateTime startDate;
   late DateTime endDate;
+  final focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _allDay = widget.schedule.isAllDay;
+    allDay = widget.schedule.isAllDay;
     startDate = widget.schedule.startTime;
     endDate = widget.schedule.endTime;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(focusNode);
+    });
   }
 
   @override
@@ -105,7 +109,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           title: bottonStateNotifier.titleController.text,
                           startTime: startDate,
                           endTime: endDate,
-                          isAllDay: _allDay,
+                          isAllDay: allDay,
                           content: bottonStateNotifier.contentController.text,
                         ),
                       );
@@ -156,6 +160,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           hintColor: const Color.fromARGB(255, 227, 227, 227),
                         ),
                         child: TextField(
+                          focusNode: focusNode,
                           controller: bottonStateNotifier.titleController,
                           decoration: const InputDecoration(
                             hintText: 'タイトルを入力してください',
@@ -186,11 +191,11 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     color: Colors.white,
                     child: SwitchListTile(
                       title: const Text('終日'),
-                      value: _allDay,
+                      value: allDay,
                       onChanged: (bool value) {
                         bottonStateNotifier.updateState();
                         setState(() {
-                          _allDay = value;
+                          allDay = value;
                         });
                       },
                       activeColor: Colors.blue,
@@ -205,12 +210,12 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     color: Colors.white,
                     child: ListTile(
                       title: Text(
-                        '開始                            ${_allDay 
+                        '開始                            ${allDay 
                         ? DateFormat('        yyyy-MM-dd').format(startDate) 
                         : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
                       ),
                       onTap: () {
-                        if (_allDay) {
+                        if (allDay) {
                           //開始 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
                             context,
@@ -268,12 +273,12 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     color: Colors.white,
                     child: ListTile(
                       title: Text(
-                        '終了                            ${_allDay 
+                        '終了                            ${allDay 
                         ? DateFormat('        yyyy-MM-dd').format(endDate) 
                         : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
                       ),
                       onTap: () {
-                        if (_allDay) {
+                        if (allDay) {
                           //終了 終日の場合、年月日にみ選択
                           DatePicker.showDatePicker(
                             context,
