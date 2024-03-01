@@ -40,8 +40,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   Widget build(BuildContext context) {
     final database = ref.watch(driftDbProvider);
     final bottonState = ref.watch(editingButtonStateProvider(widget.schedule));
-    final bottonStateNotifier = 
-      ref.watch(editingButtonStateProvider(widget.schedule).notifier);
+    final bottonStateNotifier =
+        ref.watch(editingButtonStateProvider(widget.schedule).notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -51,7 +51,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
           children: [
             GestureDetector(
               onTap: () {
-                if (bottonState) {//変更されている場合を示すことができるので流用
+                if (bottonState) {
+                  //変更されている場合を示すことができるので流用
                   showCupertinoModalPopup<void>(
                     context: context,
                     builder: (BuildContext context) => CupertinoActionSheet(

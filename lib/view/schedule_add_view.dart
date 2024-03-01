@@ -226,7 +226,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                               setState(() {
                                 startDate = date;
                                 if (endDate.isBefore(date)) {
-                                  endDate = date.add(const Duration(hours: 1)); 
+                                  endDate = date.add(const Duration(hours: 1));
                                 }
                               });
                             },
@@ -248,7 +248,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                               setState(() {
                                 startDate = date;
                                 if (endDate.isBefore(date)) {
-                                  endDate = date.add(const Duration(hours: 1)); 
+                                  endDate = date.add(const Duration(hours: 1));
                                 }
                               });
                             },
