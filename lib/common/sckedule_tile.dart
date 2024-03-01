@@ -65,7 +65,7 @@ class ScheduleTile extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    'タイトル: ${schedule.title}',
+                    schedule.title,
                     style: const TextStyle(fontSize: 15),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
