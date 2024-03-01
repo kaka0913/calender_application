@@ -39,9 +39,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   @override
   Widget build(BuildContext context) {
     final database = ref.watch(driftDbProvider);
-    final bottonState = ref.watch(buttonStateProvider);
-    final bottonStateNotifier = ref.watch(buttonStateProvider.notifier)
-      ..setdata(widget.schedule);
+    final bottonState = ref.watch(editingButtonStateProvider(widget.schedule));
+    final bottonStateNotifier = 
+      ref.watch(editingButtonStateProvider(widget.schedule).notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -159,7 +159,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         data: Theme.of(context).copyWith(
                           hintColor: const Color.fromARGB(255, 227, 227, 227),
                         ),
-                        child: TextField(
+                        child: TextFormField(
                           focusNode: focusNode,
                           controller: bottonStateNotifier.titleController,
                           decoration: const InputDecoration(
@@ -174,7 +174,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               bottonStateNotifier.updateState();
                             }
                           },
-                          onSubmitted: (text) {
+                          onFieldSubmitted: (text) {
                             bottonStateNotifier.titleController.text = text;
                             if (widget.schedule.title != text || text.isEmpty) {
                               bottonStateNotifier.updateState();
@@ -352,7 +352,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           data: Theme.of(context).copyWith(
                             hintColor: const Color.fromARGB(255, 237, 235, 235),
                           ),
-                          child: TextField(
+                          child: TextFormField(
                             controller: bottonStateNotifier.contentController,
                             decoration: const InputDecoration(
                               hintText: 'コメントを入力してください',
@@ -368,7 +368,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                 bottonStateNotifier.updateState();
                               }
                             },
-                            onSubmitted: (text) {
+                            onFieldSubmitted: (text) {
                               bottonStateNotifier.contentController.text = text;
                               if (widget.schedule.content != text ||
                                   text.isEmpty) {
