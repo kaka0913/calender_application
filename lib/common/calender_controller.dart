@@ -30,7 +30,6 @@ class CalendarController extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.only(left:deviceWidth * 0.02),
               child: Row(
-                
                 children: [
                   Center(
                     child: Material(
