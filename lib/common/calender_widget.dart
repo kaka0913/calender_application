@@ -48,7 +48,7 @@ class Calendar extends HookConsumerWidget {
                                   : index == 6
                                       ? Colors.red
                                       : Colors.black,
-                            fontSize: 10,
+                              fontSize: 10,
                             ),
                           ),
                         ],
