@@ -18,55 +18,72 @@ class CalendarController extends ConsumerWidget {
     final showingDateTime = ref.watch(showingDateTimeProvider);
     final showDateNotifier = ref.watch(showingDateTimeProvider.notifier);
 
-    return Row(
+    return Stack(
       children: [
-        InkWell(
-          onTap: () {
-            showDateNotifier.updateDate(DateTime.now());
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.grey,
+        Material(
+          child: InkWell(
+            onTap: () {
+              showDateNotifier.updateDate(DateTime.now());
+            },
+            child: Container(
+              height: 40,
+              width: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.grey,
+                ),
               ),
-            ),
-            child: const Text(
-              '今日',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
+              child: const Center(
+                child: Text(
+                  '今日',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(width: 60),
-        Center(
-          child: Text(
-            '${showingDateTime.year}年 ${showingDateTime.month}月',
-            style: const TextStyle(
-              fontSize: 20,
+        Row(
+          children: [
+            Expanded(
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // これを追加します
+                  children: [
+                    Text(
+                      '${showingDateTime.year}年${
+                        showingDateTime.month.toString().padLeft(2, '0')}月',
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        DatePicker.showDatePicker(
+                          context,
+                          minTime: DateTime(2000),
+                          maxTime: DateTime(2100),
+                          onConfirm: (date) {
+                            showDateNotifier
+                                .updateDate(DateTime(date.year, date.month));
+                          },
+                          currentTime: DateTime.now(),
+                          locale: LocaleType.jp,
+                        );
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.arrow_drop_down),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-        InkWell(
-          onTap: () {
-            DatePicker.showDatePicker(
-              context,
-              minTime: DateTime(2000),
-              maxTime: DateTime(2100),
-              onConfirm: (date) {
-                showDateNotifier.updateDate(DateTime(date.year, date.month));
-              },
-              currentTime: DateTime.now(),
-              locale: LocaleType.jp,
-            );
-          },
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: Icon(Icons.arrow_drop_down),
-          ),
+          ],
         ),
       ],
     );
