@@ -78,7 +78,7 @@ class ScheduleCarousel extends ConsumerWidget {
                 // データがnullまたは空の場合
                 return const Expanded(
                   child: Center(
-                    child: Text('予定がありません'),
+                    child: Text('予定がありません。'),
                   ),
                 );
               } else {
