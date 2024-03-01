@@ -42,98 +42,106 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
     final bottonState = ref.watch(editingButtonStateProvider(widget.schedule));
     final bottonStateNotifier =
         ref.watch(editingButtonStateProvider(widget.schedule).notifier);
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
-        title: Row(
+        title: Stack(
           children: [
-            GestureDetector(
-              onTap: () {
-                if (bottonState) {
-                  //変更されている場合を示すことができるので流用
-                  showCupertinoModalPopup<void>(
-                    context: context,
-                    builder: (BuildContext context) => CupertinoActionSheet(
-                      actions: <Widget>[
-                        CupertinoActionSheetAction(
-                          child: const Text(
-                            '編集を破棄',
-                            style: TextStyle(
-                              color: Colors.blue,
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if (bottonState) {
+                      //変更されている場合を示すことができるので流用
+                      showCupertinoModalPopup<void>(
+                        context: context,
+                        builder: (BuildContext context) => CupertinoActionSheet(
+                          actions: <Widget>[
+                            CupertinoActionSheetAction(
+                              child: const Text(
+                                '編集を破棄',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
                             ),
+                          ],
+                          cancelButton: CupertinoActionSheetAction(
+                            child: const Text(
+                              'キャンセル',
+                              style: TextStyle(
+                                color: Colors.blue,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                      cancelButton: CupertinoActionSheetAction(
-                        child: const Text(
-                          'キャンセル',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  );
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-              child: const Icon(
-                Icons.clear,
-                color: Colors.white,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 100, right: 40),
-              child: Text(
-                '予定の編集',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: (bottonState == true)
-                  ? () async {
-                      await database.updateSchedule(
-                        Schedule(
-                          id: widget.schedule.id,
-                          title: bottonStateNotifier.titleController.text,
-                          startTime: startDate,
-                          endTime: endDate,
-                          isAllDay: allDay,
-                          content: bottonStateNotifier.contentController.text,
                         ),
                       );
-                      ref.invalidate(driftDbProvider);
-                      if (mounted) {
-                        Navigator.pop(context);
-                      }
+                    } else {
+                      Navigator.pop(context);
                     }
-                  : null,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromARGB(255, 216, 216, 216),
+                  },
+                  child: const Icon(
+                    Icons.clear,
+                    color: Colors.white,
+                  ),
                 ),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  const RoundedRectangleBorder(),
+                const Spacer(), 
+                ElevatedButton(
+                  onPressed: (bottonState == true)
+                      ? () async {
+                          await database.updateSchedule(
+                            Schedule(
+                              id: widget.schedule.id,
+                              title: bottonStateNotifier.titleController.text,
+                              startTime: startDate,
+                              endTime: endDate,
+                              isAllDay: allDay,
+                              content: bottonStateNotifier.contentController.text,
+                            ),
+                          );
+                          ref.invalidate(driftDbProvider);
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
+                        }
+                      : null,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 216, 216, 216),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      const RoundedRectangleBorder(),
+                    ),
+                  ),
+                  child: Text(
+                    '保存',
+                    style: TextStyle(
+                      color: (bottonState == true)
+                          ? Colors.black
+                          : const Color.fromARGB(255, 174, 167, 167),
+                    ),
+                  ),
                 ),
-              ),
-              child: Text(
-                '保存',
-                style: TextStyle(
-                  color: (bottonState == true)
-                      ? Colors.black
-                      : const Color.fromARGB(255, 174, 167, 167),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: deviceWidth * 0.03),
+              child: const Center(
+                child: Text(
+                  '予定の編集',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

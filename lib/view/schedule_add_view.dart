@@ -48,97 +48,106 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
     final bottonState = ref.watch(buttonStateProvider);
     final bottonStateNotifier = ref.watch(buttonStateProvider.notifier);
     final database = ref.watch(driftDbProvider);
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
-        title: Row(
+        title: Stack(
           children: [
-            GestureDetector(
-              onTap: () {
-                if (bottonStateNotifier.titleController.text.isNotEmpty ||
-                    bottonStateNotifier.contentController.text.isNotEmpty) {
-                  showCupertinoModalPopup<void>(
-                    context: context,
-                    builder: (BuildContext context) => CupertinoActionSheet(
-                      actions: <Widget>[
-                        CupertinoActionSheetAction(
-                          child: const Text(
-                            '編集を破棄',
-                            style: TextStyle(
-                              color: Colors.blue,
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if (bottonStateNotifier.titleController.text.isNotEmpty ||
+                        bottonStateNotifier.contentController.text.isNotEmpty) {
+                      showCupertinoModalPopup<void>(
+                        context: context,
+                        builder: (BuildContext context) => CupertinoActionSheet(
+                          actions: <Widget>[
+                            CupertinoActionSheetAction(
+                              child: const Text(
+                                '編集を破棄',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
                             ),
+                          ],
+                          cancelButton: CupertinoActionSheetAction(
+                            child: const Text(
+                              'キャンセル',
+                              style: TextStyle(
+                                color: Colors.blue,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                      cancelButton: CupertinoActionSheetAction(
-                        child: const Text(
-                          'キャンセル',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  );
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-              child: const Icon(
-                Icons.clear,
-                color: Colors.white,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 100, right: 40),
-              child: Text(
-                '予定の追加',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: (bottonState == true)
-                  ? () async {
-                      await database.addSchedule(
-                        ScheduleForm(
-                          title: bottonStateNotifier.titleController.text,
-                          startTime: startDate,
-                          endTime: endDate,
-                          isAllDay: allDay,
-                          content: bottonStateNotifier.contentController.text,
                         ),
                       );
-                      ref.invalidate(driftDbProvider);
-                      if (mounted) {
-                        Navigator.pop(context);
-                      }
+                    } else {
+                      Navigator.pop(context);
                     }
-                  : null,
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromARGB(255, 216, 216, 216),
+                  },
+                  child: const Icon(
+                    Icons.clear,
+                    color: Colors.white,
+                  ),
                 ),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  const RoundedRectangleBorder(),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: (bottonState == true)
+                      ? () async {
+                          await database.addSchedule(
+                            ScheduleForm(
+                              title: bottonStateNotifier.titleController.text,
+                              startTime: startDate,
+                              endTime: endDate,
+                              isAllDay: allDay,
+                              content:
+                                  bottonStateNotifier.contentController.text,
+                            ),
+                          );
+                          ref.invalidate(driftDbProvider);
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
+                        }
+                      : null,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 216, 216, 216),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      const RoundedRectangleBorder(),
+                    ),
+                  ),
+                  child: Text(
+                    '保存',
+                    style: TextStyle(
+                      color: (bottonState == true)
+                          ? Colors.black
+                          : const Color.fromARGB(255, 174, 167, 167),
+                    ),
+                  ),
                 ),
-              ),
-              child: Text(
-                '保存',
-                style: TextStyle(
-                  color: (bottonState == true)
-                      ? Colors.black
-                      : const Color.fromARGB(255, 174, 167, 167),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: deviceWidth * 0.03),
+              child: const Center(
+                child: Text(
+                  '予定の追加',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

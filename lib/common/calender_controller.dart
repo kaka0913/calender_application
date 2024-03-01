@@ -22,13 +22,14 @@ class CalendarController extends ConsumerWidget {
     return ColoredBox(
       color: Colors.white,
       child: Padding(
-        padding:  EdgeInsets.only(
-            top: deviceWidth * 0.02, 
-            bottom: deviceWidth * 0.02,),
+        padding: EdgeInsets.only(
+          top: deviceWidth * 0.02,
+          bottom: deviceWidth * 0.02,
+        ),
         child: Stack(
           children: [
             Padding(
-              padding: EdgeInsets.only(left:deviceWidth * 0.02),
+              padding: EdgeInsets.only(left: deviceWidth * 0.02),
               child: Row(
                 children: [
                   Center(
@@ -83,8 +84,8 @@ class CalendarController extends ConsumerWidget {
                               minTime: DateTime(2000),
                               maxTime: DateTime(2100),
                               onConfirm: (date) {
-                                showDateNotifier
-                                    .updateDate(DateTime(date.year, date.month));
+                                showDateNotifier.updateDate(
+                                    DateTime(date.year, date.month),);
                               },
                               currentTime: DateTime.now(),
                               locale: LocaleType.jp,
