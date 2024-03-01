@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/view/schedule_add_view.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class ScheduleCarousel extends ConsumerWidget {
   const ScheduleCarousel({
@@ -20,6 +22,7 @@ class ScheduleCarousel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final repository = ref.watch(driftDbProvider);
+    initializeDateFormatting('ja_JP');
 
     return Container(
       padding: EdgeInsets.only(
@@ -32,29 +35,27 @@ class ScheduleCarousel extends ConsumerWidget {
           Row(
             children: [
               Text(
-                '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
+                DateFormat('yyyy/MM/dd （E）', 'ja_JP').format(selectedDate),
                 style: const TextStyle(fontSize: 18),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 140),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) =>
-                            ScheduleAddForm(selectedDate: selectedDate),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  child: const Icon(
-                    Icons.add,
-                  ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) =>
+                          ScheduleAddForm(selectedDate: selectedDate),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ),
+                child: const Icon(
+                  Icons.add,
                 ),
               ),
             ],
