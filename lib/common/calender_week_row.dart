@@ -17,19 +17,22 @@ class WeekRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: List.generate(
-        date!.length,
-        (index) {
-          return Expanded(
-            child: DateBox(
-              weekday: index + 1,
-              date: date!.isEmpty ? null : date?[index],
-              isSevenDays: date!.isEmpty,
-            ),
-          );
-        },
-      ).toList(),
+    return ColoredBox(
+      color: Colors.white,
+      child: Row(
+        children: List.generate(
+          date!.length,
+          (index) {
+            return Expanded(
+              child: DateBox(
+                weekday: index + 1,
+                date: date!.isEmpty ? null : date?[index],
+                isSevenDays: date!.isEmpty,
+              ),
+            );
+          },
+        ).toList(),
+      ),
     );
   }
 }

@@ -48,8 +48,8 @@ class HomePage extends ConsumerWidget {
         ),
       ),
       body: SizedBox.expand(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        child: Container(
+          color: Colors.grey[200],
           child: Column(
             children: [
               const CalendarController(),
