@@ -106,7 +106,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               startTime: startDate,
                               endTime: endDate,
                               isAllDay: allDay,
-                              content: bottonStateNotifier.contentController.text,
+                              content: bottonStateNotifier.
+                                        contentController.text,
                             ),
                           );
                           ref.invalidate(driftDbProvider);

@@ -85,9 +85,9 @@ class CalendarController extends ConsumerWidget {
                               maxTime: DateTime(2100),
                               onConfirm: (date) {
                                 showDateNotifier.updateDate(
-                                    DateTime(date.year, date.month),);
+                                    DateTime(date.year, date.month, date.day),);
                               },
-                              currentTime: DateTime.now(),
+                              currentTime: showingDateTime,
                               locale: LocaleType.jp,
                             );
                           },
