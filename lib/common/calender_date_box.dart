@@ -35,7 +35,7 @@ class DateBox extends ConsumerWidget {
       loading: () => false,
       error: (_, __) => false,
     );
-    double deviceWidth = MediaQuery.of(context).size.width;
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
       //DateBoxを押した際の挙動
