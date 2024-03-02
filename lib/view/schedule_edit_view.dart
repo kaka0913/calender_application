@@ -43,8 +43,10 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
     final bottonStateNotifier =
         ref.watch(editingButtonStateProvider(widget.schedule).notifier);
     final deviceWidth = MediaQuery.of(context).size.width;
+    const themeColor = Color.fromARGB(255, 216, 216, 216);
 
     return Scaffold(
+      backgroundColor: themeColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
@@ -118,7 +120,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                       : null,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 216, 216, 216),
+                      themeColor,
                     ),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       const RoundedRectangleBorder(),
@@ -149,308 +151,302 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
           ],
         ),
       ),
-      body: ColoredBox(
-        color: const Color.fromARGB(255, 216, 216, 216),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  color: Colors.white,
+                  child: GestureDetector(
+                    onTap: () {
+                      primaryFocus?.unfocus();
+                    },
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        hintColor: themeColor,
+                      ),
+                      child: TextFormField(
+                        focusNode: focusNode,
+                        controller: bottonStateNotifier.titleController,
+                        decoration: const InputDecoration(
+                          hintText: 'タイトルを入力してください',
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (text) {
+                          if (widget.schedule.title != text || text.isEmpty) {
+                            bottonStateNotifier.updateState();
+                          }
+                        },
+                        onFieldSubmitted: (text) {
+                          bottonStateNotifier.titleController.text = text;
+                          if (widget.schedule.title != text || text.isEmpty) {
+                            bottonStateNotifier.updateState();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: ColoredBox(
+                  color: Colors.white,
+                  child: SwitchListTile(
+                    title: const Text('終日'),
+                    value: allDay,
+                    onChanged: (bool value) {
+                      bottonStateNotifier.updateState();
+                      setState(() {
+                        allDay = value;
+                      });
+                    },
+                    activeColor: Colors.blue,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.grey,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 3),
+                child: ColoredBox(
+                  color: Colors.white,
+                  child: ListTile(
+                    title: Text(
+                      '開始                            ${allDay 
+                      ? DateFormat('        yyyy-MM-dd').format(startDate) 
+                      : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
+                    ),
+                    onTap: () {
+                      if (allDay) {
+                        //開始 終日の場合、年月日にみ選択
+                        DatePicker.showDatePicker(
+                          context,
+                          minDateTime: DateTime.now()
+                              .subtract(const Duration(days: 365)),
+                          maxDateTime:
+                              DateTime.now().add(const Duration(days: 365)),
+                          initialDateTime: startDate,
+                          locale: DateTimePickerLocale.jp,
+                          pickerMode: DateTimePickerMode.datetime,
+                          dateFormat: 'yyyy年  MM月  dd日 ',
+                          onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                          onConfirm: (date, _) {
+                            setState(() {
+                              startDate = date;
+                              if (endDate.isBefore(date)) {
+                                endDate = date.add(const Duration(hours: 1));
+                              }
+                            });
+                          },
+                        );
+                      } else {
+                        //開始 月日時分
+                        DatePicker.showDatePicker(
+                          context,
+                          minDateTime: DateTime.now()
+                              .subtract(const Duration(days: 365)),
+                          maxDateTime:
+                              DateTime.now().add(const Duration(days: 365)),
+                          initialDateTime: startDate,
+                          locale: DateTimePickerLocale.jp,
+                          pickerMode: DateTimePickerMode.datetime,
+                          dateFormat: 'MM月  dd日 HH:mm',
+                          minuteDivider: 15, // 15分刻みに設定
+                          onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                          onConfirm: (date, _) {
+                            setState(() {
+                              startDate = date;
+                              if (endDate.isBefore(date)) {
+                                endDate = date.add(const Duration(hours: 1));
+                              }
+                            });
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 3),
+                child: ColoredBox(
+                  color: Colors.white,
+                  child: ListTile(
+                    title: Text(
+                      '終了                            ${allDay 
+                      ? DateFormat('        yyyy-MM-dd').format(endDate) 
+                      : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
+                    ),
+                    onTap: () {
+                      if (allDay) {
+                        //終了 終日の場合、年月日にみ選択
+                        DatePicker.showDatePicker(
+                          context,
+                          minDateTime: startDate,
+                          maxDateTime:
+                              DateTime.now().add(const Duration(days: 365)),
+                          initialDateTime: endDate,
+                          locale: DateTimePickerLocale.jp,
+                          pickerMode: DateTimePickerMode.datetime,
+                          dateFormat: 'yyyy年  MM月  dd日 ',
+                          onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                          onConfirm: (date, _) {
+                            setState(() {
+                              if (startDate.isAfter(date)) {
+                                endDate = startDate;
+                              } else {
+                                endDate = date;
+                              }
+                            });
+                          },
+                        );
+                      } else {
+                        //終了 月日時分
+                        DatePicker.showDatePicker(
+                          context,
+                          minDateTime: startDate,
+                          maxDateTime:
+                              DateTime.now().add(const Duration(days: 365)),
+                          initialDateTime: endDate,
+                          locale: DateTimePickerLocale.jp,
+                          pickerMode: DateTimePickerMode.datetime,
+                          dateFormat: 'MM月dd日 HH:mm',
+                          minuteDivider: 15, // 15分刻みに設定
+                          onChange: (_, __) =>
+                              bottonStateNotifier.updateState(),
+                          onConfirm: (date, _) {
+                            setState(() {
+                              if (date.isBefore(startDate)) {
+                                endDate =
+                                    startDate.add(const Duration(hours: 1));
+                              } else {
+                                endDate = date;
+                              }
+                            });
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  primaryFocus?.unfocus();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Container(
-                    padding: const EdgeInsets.all(10),
                     color: Colors.white,
+                    padding: const EdgeInsets.only(
+                      bottom: 80,
+                      left: 10,
+                      right: 10,
+                    ),
                     child: GestureDetector(
                       onTap: () {
                         primaryFocus?.unfocus();
                       },
                       child: Theme(
                         data: Theme.of(context).copyWith(
-                          hintColor: const Color.fromARGB(255, 227, 227, 227),
+                          hintColor: themeColor,
                         ),
                         child: TextFormField(
-                          focusNode: focusNode,
-                          controller: bottonStateNotifier.titleController,
+                          controller: bottonStateNotifier.contentController,
                           decoration: const InputDecoration(
-                            hintText: 'タイトルを入力してください',
-                            labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 237, 235, 235),
-                            ),
+                            hintText: 'コメントを入力してください',
                             border: InputBorder.none,
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
                           ),
+                          maxLines: null,
                           onChanged: (text) {
-                            if (widget.schedule.title != text || text.isEmpty) {
+                            if (widget.schedule.title != text ||
+                                text.isEmpty) {
                               bottonStateNotifier.updateState();
                             }
                           },
                           onFieldSubmitted: (text) {
-                            bottonStateNotifier.titleController.text = text;
-                            if (widget.schedule.title != text || text.isEmpty) {
+                            bottonStateNotifier.contentController.text = text;
+                            if (widget.schedule.content != text ||
+                                text.isEmpty) {
                               bottonStateNotifier.updateState();
                             }
                           },
+                          textInputAction: TextInputAction.done,
                         ),
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: ColoredBox(
-                    color: Colors.white,
-                    child: SwitchListTile(
-                      title: const Text('終日'),
-                      value: allDay,
-                      onChanged: (bool value) {
-                        bottonStateNotifier.updateState();
-                        setState(() {
-                          allDay = value;
-                        });
-                      },
-                      activeColor: Colors.blue,
-                      inactiveThumbColor: Colors.white,
-                      inactiveTrackColor: Colors.grey,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: const RoundedRectangleBorder(),
+                      foregroundColor: Colors.red,
+                      backgroundColor: Colors.white,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3),
-                  child: ColoredBox(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(
-                        '開始                            ${allDay 
-                        ? DateFormat('        yyyy-MM-dd').format(startDate) 
-                        : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
-                      ),
-                      onTap: () {
-                        if (allDay) {
-                          //開始 終日の場合、年月日にみ選択
-                          DatePicker.showDatePicker(
-                            context,
-                            minDateTime: DateTime.now()
-                                .subtract(const Duration(days: 365)),
-                            maxDateTime:
-                                DateTime.now().add(const Duration(days: 365)),
-                            initialDateTime: startDate,
-                            locale: DateTimePickerLocale.jp,
-                            pickerMode: DateTimePickerMode.datetime,
-                            dateFormat: 'yyyy年  MM月  dd日 ',
-                            onChange: (_, __) =>
-                                bottonStateNotifier.updateState(),
-                            onConfirm: (date, _) {
-                              setState(() {
-                                startDate = date;
-                                if (endDate.isBefore(date)) {
-                                  endDate = date.add(const Duration(hours: 1));
-                                }
-                              });
-                            },
-                          );
-                        } else {
-                          //開始 月日時分
-                          DatePicker.showDatePicker(
-                            context,
-                            minDateTime: DateTime.now()
-                                .subtract(const Duration(days: 365)),
-                            maxDateTime:
-                                DateTime.now().add(const Duration(days: 365)),
-                            initialDateTime: startDate,
-                            locale: DateTimePickerLocale.jp,
-                            pickerMode: DateTimePickerMode.datetime,
-                            dateFormat: 'MM月  dd日 HH:mm',
-                            minuteDivider: 15, // 15分刻みに設定
-                            onChange: (_, __) =>
-                                bottonStateNotifier.updateState(),
-                            onConfirm: (date, _) {
-                              setState(() {
-                                startDate = date;
-                                if (endDate.isBefore(date)) {
-                                  endDate = date.add(const Duration(hours: 1));
-                                }
-                              });
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3),
-                  child: ColoredBox(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(
-                        '終了                            ${allDay 
-                        ? DateFormat('        yyyy-MM-dd').format(endDate) 
-                        : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
-                      ),
-                      onTap: () {
-                        if (allDay) {
-                          //終了 終日の場合、年月日にみ選択
-                          DatePicker.showDatePicker(
-                            context,
-                            minDateTime: startDate,
-                            maxDateTime:
-                                DateTime.now().add(const Duration(days: 365)),
-                            initialDateTime: endDate,
-                            locale: DateTimePickerLocale.jp,
-                            pickerMode: DateTimePickerMode.datetime,
-                            dateFormat: 'yyyy年  MM月  dd日 ',
-                            onChange: (_, __) =>
-                                bottonStateNotifier.updateState(),
-                            onConfirm: (date, _) {
-                              setState(() {
-                                if (startDate.isAfter(date)) {
-                                  endDate = startDate;
-                                } else {
-                                  endDate = date;
-                                }
-                              });
-                            },
-                          );
-                        } else {
-                          //終了 月日時分
-                          DatePicker.showDatePicker(
-                            context,
-                            minDateTime: startDate,
-                            maxDateTime:
-                                DateTime.now().add(const Duration(days: 365)),
-                            initialDateTime: endDate,
-                            locale: DateTimePickerLocale.jp,
-                            pickerMode: DateTimePickerMode.datetime,
-                            dateFormat: 'MM月dd日 HH:mm',
-                            minuteDivider: 15, // 15分刻みに設定
-                            onChange: (_, __) =>
-                                bottonStateNotifier.updateState(),
-                            onConfirm: (date, _) {
-                              setState(() {
-                                if (date.isBefore(startDate)) {
-                                  endDate =
-                                      startDate.add(const Duration(hours: 1));
-                                } else {
-                                  endDate = date;
-                                }
-                              });
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    primaryFocus?.unfocus();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15, bottom: 10),
-                    child: Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.only(
-                        bottom: 80,
-                        left: 10,
-                        right: 10,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          primaryFocus?.unfocus();
-                        },
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            hintColor: const Color.fromARGB(255, 237, 235, 235),
-                          ),
-                          child: TextFormField(
-                            controller: bottonStateNotifier.contentController,
-                            decoration: const InputDecoration(
-                              hintText: 'コメントを入力してください',
-                              border: InputBorder.none,
-                              labelStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
+                    onPressed: () {
+                      showCupertinoDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoAlertDialog(
+                            title: const Text(
+                              '予定の削除',
+                              style: TextStyle(color: Colors.black),
                             ),
-                            maxLines: null,
-                            onChanged: (text) {
-                              if (widget.schedule.title != text ||
-                                  text.isEmpty) {
-                                bottonStateNotifier.updateState();
-                              }
-                            },
-                            onFieldSubmitted: (text) {
-                              bottonStateNotifier.contentController.text = text;
-                              if (widget.schedule.content != text ||
-                                  text.isEmpty) {
-                                bottonStateNotifier.updateState();
-                              }
-                            },
-                            textInputAction: TextInputAction.done,
-                          ),
-                        ),
-                      ),
-                    ),
+                            content: const Text(
+                              '本当にこの日の予定を削除しますか？',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            actions: <Widget>[
+                              CupertinoDialogAction(
+                                child: const Text(
+                                  'キャンセル',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                child: const Text(
+                                  '削除',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                onPressed: () async {
+                                  await database
+                                      .deleteSchedule(widget.schedule.id);
+                                  ref.invalidate(driftDbProvider);
+                                  if (mounted) {
+                                    Navigator.of(context).pop(); // ダイアログ
+                                    Navigator.of(context).pop(); // 予定詳細画面
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: const Text('この予定を削除'),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(),
-                        foregroundColor: Colors.red,
-                        backgroundColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        showCupertinoDialog<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoAlertDialog(
-                              title: const Text(
-                                '予定の削除',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              content: const Text(
-                                '本当にこの日の予定を削除しますか？',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              actions: <Widget>[
-                                CupertinoDialogAction(
-                                  child: const Text(
-                                    'キャンセル',
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                CupertinoDialogAction(
-                                  child: const Text(
-                                    '削除',
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                  onPressed: () async {
-                                    await database
-                                        .deleteSchedule(widget.schedule.id);
-                                    ref.invalidate(driftDbProvider);
-                                    if (mounted) {
-                                      Navigator.of(context).pop(); // ダイアログ
-                                      Navigator.of(context).pop(); // 予定詳細画面
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: const Text('この予定を削除'),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
