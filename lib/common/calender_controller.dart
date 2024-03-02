@@ -68,7 +68,7 @@ class CalendarController extends ConsumerWidget {
                 Expanded(
                   child: Center(
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center, // これを追加します
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           '${showingDateTime.year}年${
