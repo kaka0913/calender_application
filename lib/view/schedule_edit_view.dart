@@ -216,10 +216,16 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 child: ColoredBox(
                   color: Colors.white,
                   child: ListTile(
-                    title: Text(
-                      '開始                            ${allDay 
-                      ? DateFormat('        yyyy-MM-dd').format(startDate) 
-                      : DateFormat('yyyy-MM-dd HH:mm').format(startDate)}',
+                    title: Row(
+                      children: <Widget>[
+                        const Text('開始'),
+                        const Spacer(),
+                        Text(
+                          allDay 
+                            ? DateFormat('yyyy-MM-dd').format(startDate) 
+                            : DateFormat('yyyy-MM-dd HH:mm').format(startDate),
+                        ),
+                      ],
                     ),
                     onTap: () {
                       if (allDay) {
@@ -279,10 +285,16 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 child: ColoredBox(
                   color: Colors.white,
                   child: ListTile(
-                    title: Text(
-                      '終了                            ${allDay 
-                      ? DateFormat('        yyyy-MM-dd').format(endDate) 
-                      : DateFormat('yyyy-MM-dd HH:mm').format(endDate)}',
+                    title: Row(
+                      children: <Widget>[
+                        const Text('終了'),
+                        const Spacer(),
+                        Text(
+                          allDay 
+                            ? DateFormat('yyyy-MM-dd').format(endDate) 
+                            : DateFormat('yyyy-MM-dd HH:mm').format(endDate),
+                        ),
+                      ],
                     ),
                     onTap: () {
                       if (allDay) {
