@@ -97,7 +97,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                     color: Colors.white,
                   ),
                 ),
-                const Spacer(), 
+                const Spacer(),
                 ElevatedButton(
                   onPressed: (bottonState == true)
                       ? () async {
@@ -108,8 +108,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               startTime: startDate,
                               endTime: endDate,
                               isAllDay: allDay,
-                              content: bottonStateNotifier.
-                                        contentController.text,
+                              content:
+                                  bottonStateNotifier.contentController.text,
                             ),
                           );
                           ref.invalidate(driftDbProvider);
@@ -370,8 +370,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           ),
                           maxLines: null,
                           onChanged: (text) {
-                            if (widget.schedule.title != text ||
-                                text.isEmpty) {
+                            if (widget.schedule.title != text || text.isEmpty) {
                               bottonStateNotifier.updateState();
                             }
                           },

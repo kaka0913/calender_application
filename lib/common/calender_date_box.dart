@@ -83,18 +83,16 @@ class DateBox extends ConsumerWidget {
               width: 30,
               height: 30,
               decoration: BoxDecoration(
-                color: isToday
-                    ? Colors.blue
-                    : Colors.transparent,
+                color: isToday ? Colors.blue : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Text(
                   date!.day.toString(),
                   style: TextStyle(
-                    color:  today.day == date!.day 
-                        && today.month == date!.month 
-                        && today.year == date!.year
+                    color: today.day == date!.day &&
+                            today.month == date!.month &&
+                            today.year == date!.year
                         ? Colors.white
                         : showingMonth != date!.month
                             ? Colors.grey

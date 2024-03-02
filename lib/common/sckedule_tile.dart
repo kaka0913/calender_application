@@ -75,38 +75,41 @@ class ScheduleTile extends StatelessWidget {
                     ),
                   ),
                 ),
-SizedBox(
-  width: deviceWidth * 0.52,
-  child: LayoutBuilder(
-    builder: (BuildContext context, BoxConstraints constraints) {
-      final span = TextSpan(
-        text: schedule.title,
-        style: const TextStyle(fontSize: 15),
-      );
-      final tp = TextPainter(
-        text: span,
-        textDirection: TextDirection.ltr,
-        maxLines: 1,
-      )..layout(maxWidth: constraints.maxWidth);
+                SizedBox(
+                  width: deviceWidth * 0.52,
+                  child: LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      final span = TextSpan(
+                        text: schedule.title,
+                        style: const TextStyle(fontSize: 15),
+                      );
+                      final tp = TextPainter(
+                        text: span,
+                        textDirection: TextDirection.ltr,
+                        maxLines: 1,
+                      )..layout(maxWidth: constraints.maxWidth);
 
-      if (tp.didExceedMaxLines) {
-        final endPosition = tp.getPositionForOffset(Offset(constraints.maxWidth,0));
-        final trimmedText = schedule.title.substring(0, endPosition.offset-1);
-        return Text(
-          '$trimmedText...',
-          style: const TextStyle(fontSize: 15),
-          maxLines: 1,
-        );
-      } else {
-        return Text(
-          schedule.title,
-          style: const TextStyle(fontSize: 15),
-          maxLines: 1,
-        );
-      }
-    },
-  ),
-),
+                      if (tp.didExceedMaxLines) {
+                        final endPosition = tp.getPositionForOffset(
+                            Offset(constraints.maxWidth, 0),);
+                        final trimmedText =
+                            schedule.title.substring(0, endPosition.offset - 1);
+                        return Text(
+                          '$trimmedText...',
+                          style: const TextStyle(fontSize: 15),
+                          maxLines: 1,
+                        );
+                      } else {
+                        return Text(
+                          schedule.title,
+                          style: const TextStyle(fontSize: 15),
+                          maxLines: 1,
+                        );
+                      }
+                    },
+                  ),
+                ),
               ],
             ),
             const Divider(

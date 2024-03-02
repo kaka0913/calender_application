@@ -365,8 +365,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                               bottonStateNotifier.updateState();
                             }
                           },
-                          onSubmitted: (_) =>
-                              bottonStateNotifier.updateState(),
+                          onSubmitted: (_) => bottonStateNotifier.updateState(),
                           textInputAction: TextInputAction.done,
                         ),
                       ),
