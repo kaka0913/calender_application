@@ -12,6 +12,8 @@ class ScheduleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -28,33 +30,43 @@ class ScheduleTile extends StatelessWidget {
             Row(
               children: <Widget>[
                 if (schedule.isAllDay)
-                  const Column(
-                    children: [
-                      Center(
-                        child: Text(
-                          '終日',
-                          style: TextStyle(fontSize: 10),
+                  const SizedBox(
+                    width: 40,
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            '終日',
+                            style: TextStyle(fontSize: 10),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )
                 else
-                  Column(
-                    children: [
-                      Text(
-                        '${schedule.startTime.hour.toString().padLeft(2,'0')}:${
-                          schedule.startTime.minute.toString().padLeft(2,'0')}',
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                      Text(
-                        '${schedule.endTime.hour.toString().padLeft(2, '0')}:${
-                          schedule.endTime.minute.toString().padLeft(2, '0')}',
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                    ],
+                  SizedBox(
+                    width: 40,
+                    child: Column(
+                      children: [
+                        Text(
+                          '${schedule.startTime.hour.toString()
+                          .padLeft(2,'0')}:${
+                            schedule.startTime.minute.toString()
+                            .padLeft(2,'0')}',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                        Text(
+                          '${schedule.endTime.hour.toString()
+                          .padLeft(2, '0')}:${
+                            schedule.endTime.minute.toString()
+                            .padLeft(2, '0')}',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ),
                   ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  padding: const EdgeInsets.only(left: 8, right: 15),
                   child: Container(
                     width: 4,
                     height: 50,
@@ -63,12 +75,39 @@ class ScheduleTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    'タイトル: ${schedule.title}',
-                    style: const TextStyle(fontSize: 15),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                SizedBox(
+                  width: deviceWidth * 0.52,
+                  child: LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      final span = TextSpan(
+                        text: schedule.title,
+                        style: const TextStyle(fontSize: 15),
+                      );
+                      final tp = TextPainter(
+                        text: span,
+                        textDirection: TextDirection.ltr,
+                        maxLines: 1,
+                      )..layout(maxWidth: constraints.maxWidth);
+
+                      if (tp.didExceedMaxLines) {
+                        final endPosition = tp.getPositionForOffset(
+                            Offset(constraints.maxWidth, 0),);
+                        final trimmedText =
+                            schedule.title.substring(0, endPosition.offset - 1);
+                        return Text(
+                          '$trimmedText...',
+                          style: const TextStyle(fontSize: 15),
+                          maxLines: 1,
+                        );
+                      } else {
+                        return Text(
+                          schedule.title,
+                          style: const TextStyle(fontSize: 15),
+                          maxLines: 1,
+                        );
+                      }
+                    },
                   ),
                 ),
               ],

@@ -27,3 +27,29 @@ class ButtonState extends StateNotifier<bool> {
     contentController.text = schedule.content;
   }
 }
+
+final editingButtonStateProvider =
+    AutoDisposeStateNotifierProvider.family<EditingButtonState, bool, Schedule>(
+        (ref, schedule) {
+  return EditingButtonState(
+    initialTitle: schedule.title,
+    initialContent: schedule.content,
+  );
+});
+
+class EditingButtonState extends StateNotifier<bool> {
+  EditingButtonState({
+    required String initialTitle,
+    required String initialContent,
+  })  : titleController = TextEditingController(text: initialTitle),
+        contentController = TextEditingController(text: initialContent),
+        super(false);
+
+  final TextEditingController titleController;
+  final TextEditingController contentController;
+
+  void updateState() {
+    state =
+        titleController.text.isNotEmpty && contentController.text.isNotEmpty;
+  }
+}

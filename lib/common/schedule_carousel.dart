@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 // Project imports:
 import 'package:calender_application/common/sckedule_tile.dart';
@@ -20,6 +22,7 @@ class ScheduleCarousel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final repository = ref.watch(driftDbProvider);
+    initializeDateFormatting('ja_JP');
 
     return Container(
       padding: EdgeInsets.only(
@@ -32,29 +35,27 @@ class ScheduleCarousel extends ConsumerWidget {
           Row(
             children: [
               Text(
-                '${selectedDate.year}/${selectedDate.month}/${selectedDate.day}',
+                DateFormat('yyyy/MM/dd （E）', 'ja_JP').format(selectedDate),
                 style: const TextStyle(fontSize: 18),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 140),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) =>
-                            ScheduleAddForm(selectedDate: selectedDate),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.blue,
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  child: const Icon(
-                    Icons.add,
-                  ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) =>
+                          ScheduleAddForm(selectedDate: selectedDate),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ),
+                child: const Icon(
+                  Icons.add,
                 ),
               ),
             ],
@@ -78,18 +79,20 @@ class ScheduleCarousel extends ConsumerWidget {
                 // データがnullまたは空の場合
                 return const Expanded(
                   child: Center(
-                    child: Text('予定がありません'),
+                    child: Text('予定がありません。'),
                   ),
                 );
               } else {
                 // データが存在する場合
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return ScheduleTile(schedule: snapshot.data![index]);
-                  },
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ScheduleTile(schedule: snapshot.data![index]);
+                    },
+                  ),
                 );
               }
             },

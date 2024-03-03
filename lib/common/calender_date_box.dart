@@ -35,6 +35,7 @@ class DateBox extends ConsumerWidget {
       loading: () => false,
       error: (_, __) => false,
     );
+    final deviceWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
       //DateBoxを押した際の挙動
@@ -75,30 +76,39 @@ class DateBox extends ConsumerWidget {
       },
       child: AspectRatio(
         aspectRatio: 1,
-        child: Container(
-          decoration: BoxDecoration(
-            color: isToday
-                ? const Color.fromARGB(255, 108, 179, 237)
-                : Colors.transparent,
-            shape: BoxShape.circle,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                date!.day.toString(),
-                style: TextStyle(
-                  color: showingMonth != date!.month
-                      ? Colors.grey
-                      : weekday == 6
-                          ? Colors.blue
-                          : weekday == 7
-                              ? Colors.red
-                              : Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: isToday ? Colors.blue : Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  date!.day.toString(),
+                  style: TextStyle(
+                    color: today.day == date!.day &&
+                            today.month == date!.month &&
+                            today.year == date!.year
+                        ? Colors.white
+                        : showingMonth != date!.month
+                            ? Colors.grey
+                            : weekday == 6
+                                ? Colors.blue
+                                : weekday == 7
+                                    ? Colors.red
+                                    : Colors.black,
+                  ),
                 ),
               ),
-              if (hasAppointment)
-                Container(
+            ),
+            if (hasAppointment)
+              Padding(
+                padding: EdgeInsets.only(top: deviceWidth * 0.002),
+                child: Container(
                   width: 7,
                   height: 7,
                   decoration: BoxDecoration(
@@ -108,8 +118,8 @@ class DateBox extends ConsumerWidget {
                     shape: BoxShape.circle,
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

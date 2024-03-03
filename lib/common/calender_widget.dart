@@ -25,32 +25,40 @@ class Calendar extends HookConsumerWidget {
 
     return Column(
       children: [
-        Row(
-          children: List.generate(
-            7,
-            (index) {
-              return Expanded(
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        weekdayString[index],
-                        style: TextStyle(
-                          color: index == 5
-                              ? Colors.blue
-                              : index == 6
-                                  ? Colors.red
-                                  : Colors.black,
-                        ),
+        ColoredBox(
+          color: Colors.white,
+          child: Container(
+            color: Colors.grey[200],
+            height: 20,
+            child: Row(
+              children: List.generate(
+                7,
+                (index) {
+                  return Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            weekdayString[index],
+                            style: TextStyle(
+                              color: index == 5
+                                  ? Colors.blue
+                                  : index == 6
+                                      ? Colors.red
+                                      : Colors.black,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ).toList(),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+          ),
         ),
         ...calendarData.map(
           (week) {

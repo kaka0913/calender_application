@@ -36,17 +36,20 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text(
-          'カレンダー',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+        title: const Center(
+          child: Text(
+            'カレンダー',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
         ),
       ),
       body: SizedBox.expand(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        child: Container(
+          color: Colors.grey[200],
           child: Column(
             children: [
               const CalendarController(),
