@@ -84,13 +84,15 @@ class ScheduleCarousel extends ConsumerWidget {
                 );
               } else {
                 // データが存在する場合
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return ScheduleTile(schedule: snapshot.data![index]);
-                  },
+                return Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ScheduleTile(schedule: snapshot.data![index]);
+                    },
+                  ),
                 );
               }
             },
