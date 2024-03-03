@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
+import 'package:calender_application/common/action_sheet.dart';
 import 'package:calender_application/common/date_picke.dart';
 import 'package:calender_application/common/datetime_picker.dart';
 import 'package:calender_application/repository/drift_repository.dart';
@@ -61,33 +62,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                       //変更されている場合を示すことができるので流用
                       showCupertinoModalPopup<void>(
                         context: context,
-                        builder: (BuildContext context) => CupertinoActionSheet(
-                          actions: <Widget>[
-                            CupertinoActionSheetAction(
-                              child: const Text(
-                                '編集を破棄',
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                          cancelButton: CupertinoActionSheetAction(
-                            child: const Text(
-                              'キャンセル',
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ),
+                        builder: (BuildContext context) =>
+                            const CustomCupertinoActionSheet(),
                       );
                     } else {
                       Navigator.pop(context);
