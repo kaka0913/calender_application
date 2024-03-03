@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_cupertino_date_picker_fork/flutter_cupertino_date_picker_fork.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
+import 'package:calender_application/common/date_picke.dart';
+import 'package:calender_application/common/datetime_picker.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
 
@@ -221,59 +222,46 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         const Text('開始'),
                         const Spacer(),
                         Text(
-                          allDay 
-                            ? DateFormat('yyyy-MM-dd').format(startDate) 
-                            : DateFormat('yyyy-MM-dd HH:mm').format(startDate),
+                          allDay
+                              ? DateFormat('yyyy-MM-dd').format(startDate)
+                              : DateFormat('yyyy-MM-dd HH:mm')
+                                  .format(startDate),
                         ),
                       ],
                     ),
                     onTap: () {
                       if (allDay) {
                         //開始 終日の場合、年月日にみ選択
-                        DatePicker.showDatePicker(
-                          context,
-                          minDateTime: DateTime.now()
-                              .subtract(const Duration(days: 365)),
-                          maxDateTime:
-                              DateTime.now().add(const Duration(days: 365)),
-                          initialDateTime: startDate,
-                          locale: DateTimePickerLocale.jp,
-                          pickerMode: DateTimePickerMode.datetime,
-                          dateFormat: 'yyyy年  MM月  dd日 ',
-                          onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
-                          onConfirm: (date, _) {
-                            setState(() {
-                              startDate = date;
-                              if (endDate.isBefore(date)) {
-                                endDate = date.add(const Duration(hours: 1));
-                              }
-                            });
-                          },
+                        showCupertinoModalPopup<void>(
+                          context: context,
+                          builder: (_) => CustomCupertinoDatePicker(
+                            onDateTimeChanged: (DateTime date) {
+                              setState(() {
+                                startDate = date;
+                                if (endDate.isBefore(date)) {
+                                  endDate = date.add(const Duration(hours: 1));
+                                }
+                              });
+                            },
+                          ),
                         );
                       } else {
                         //開始 月日時分
-                        DatePicker.showDatePicker(
-                          context,
-                          minDateTime: DateTime.now()
-                              .subtract(const Duration(days: 365)),
-                          maxDateTime:
-                              DateTime.now().add(const Duration(days: 365)),
-                          initialDateTime: startDate,
-                          locale: DateTimePickerLocale.jp,
-                          pickerMode: DateTimePickerMode.datetime,
-                          dateFormat: 'MM月  dd日 HH:mm',
-                          minuteDivider: 15, // 15分刻みに設定
-                          onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
-                          onConfirm: (date, _) {
-                            setState(() {
-                              startDate = date;
-                              if (endDate.isBefore(date)) {
-                                endDate = date.add(const Duration(hours: 1));
-                              }
-                            });
-                          },
+                        showCupertinoModalPopup<void>(
+                          context: context,
+                          builder: (_) => CustomCupertinoDateTimePicker(
+                            initialDateTime: startDate,
+                            onDateTimeChanged: (DateTime date) {
+                              bottonStateNotifier.updateState();
+                              setState(() {
+                                startDate = date;
+                                if (endDate.isBefore(date) ||
+                                    endDate.isAtSameMomentAs(date)) {
+                                  endDate = date.add(const Duration(hours: 1));
+                                }
+                              });
+                            },
+                          ),
                         );
                       }
                     },
@@ -290,60 +278,50 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         const Text('終了'),
                         const Spacer(),
                         Text(
-                          allDay 
-                            ? DateFormat('yyyy-MM-dd').format(endDate) 
-                            : DateFormat('yyyy-MM-dd HH:mm').format(endDate),
+                          allDay
+                              ? DateFormat('yyyy-MM-dd').format(endDate)
+                              : DateFormat('yyyy-MM-dd HH:mm').format(endDate),
                         ),
                       ],
                     ),
                     onTap: () {
                       if (allDay) {
                         //終了 終日の場合、年月日にみ選択
-                        DatePicker.showDatePicker(
-                          context,
-                          minDateTime: startDate,
-                          maxDateTime:
-                              DateTime.now().add(const Duration(days: 365)),
-                          initialDateTime: endDate,
-                          locale: DateTimePickerLocale.jp,
-                          pickerMode: DateTimePickerMode.datetime,
-                          dateFormat: 'yyyy年  MM月  dd日 ',
-                          onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
-                          onConfirm: (date, _) {
-                            setState(() {
-                              if (startDate.isAfter(date)) {
-                                endDate = startDate;
-                              } else {
-                                endDate = date;
-                              }
-                            });
-                          },
+                        showCupertinoModalPopup<void>(
+                          context: context,
+                          builder: (_) => CustomCupertinoDatePicker(
+                            onDateTimeChanged: (DateTime date) {
+                              bottonStateNotifier.updateState();
+                              setState(() {
+                                if (startDate.isAfter(date)) {
+                                  endDate = startDate;
+                                } else {
+                                  endDate = date;
+                                }
+                              });
+                            },
+                          ),
                         );
                       } else {
                         //終了 月日時分
-                        DatePicker.showDatePicker(
-                          context,
-                          minDateTime: startDate,
-                          maxDateTime:
-                              DateTime.now().add(const Duration(days: 365)),
-                          initialDateTime: endDate,
-                          locale: DateTimePickerLocale.jp,
-                          pickerMode: DateTimePickerMode.datetime,
-                          dateFormat: 'MM月dd日 HH:mm',
-                          minuteDivider: 15, // 15分刻みに設定
-                          onChange: (_, __) =>
-                              bottonStateNotifier.updateState(),
-                          onConfirm: (date, _) {
-                            setState(() {
-                              if (date.isBefore(startDate)) {
-                                endDate =
-                                    startDate.add(const Duration(hours: 1));
-                              } else {
-                                endDate = date;
-                              }
-                            });
-                          },
+                        showCupertinoModalPopup<void>(
+                          context: context,
+                          builder: (_) => CustomCupertinoDateTimePicker(
+                            minimumDateTime:
+                                startDate.add(const Duration(hours: 1)),
+                            initialDateTime: endDate,
+                            onDateTimeChanged: (DateTime date) {
+                              bottonStateNotifier.updateState();
+                              setState(() {
+                                if (date.isBefore(startDate)) {
+                                  endDate =
+                                      startDate.add(const Duration(hours: 1));
+                                } else {
+                                  endDate = date;
+                                }
+                              });
+                            },
+                          ),
                         );
                       }
                     },
