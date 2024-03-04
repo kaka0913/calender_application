@@ -58,95 +58,102 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
-        title: Stack(
-          children: [
-            Row(
-              children: [
-                GestureDetector(
+        title: GestureDetector(
                   onTap: () {
-                    if (bottonStateNotifier.titleController.text.isNotEmpty ||
-                        bottonStateNotifier.contentController.text.isNotEmpty) {
-                      showCupertinoModalPopup<void>(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            const CustomCupertinoActionSheet(),
-                      );
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Icon(
-                    Icons.clear,
-                    color: Colors.white,
+                    primaryFocus?.unfocus();
+                  },         
+          child: Stack(
+            children: [
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      if (bottonStateNotifier.titleController.text.isNotEmpty ||
+                          bottonStateNotifier.contentController
+                            .text.isNotEmpty) 
+                        {
+                        showCupertinoModalPopup<void>(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              const CustomCupertinoActionSheet(),
+                        );
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Icon(
+                      Icons.clear,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: (bottonState == true)
-                      ? () async {
-                          await database.addSchedule(
-                            ScheduleForm(
-                              title: bottonStateNotifier.titleController.text,
-                              startTime: startDate,
-                              endTime: endDate,
-                              isAllDay: allDay,
-                              content:
-                                  bottonStateNotifier.contentController.text,
-                            ),
-                          );
-                          ref.invalidate(driftDbProvider);
-                          if (mounted) {
-                            Navigator.pop(context);
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: (bottonState == true)
+                        ? () async {
+                            await database.addSchedule(
+                              ScheduleForm(
+                                title: bottonStateNotifier.titleController.text,
+                                startTime: startDate,
+                                endTime: endDate,
+                                isAllDay: allDay,
+                                content:
+                                    bottonStateNotifier.contentController.text,
+                              ),
+                            );
+                            ref.invalidate(driftDbProvider);
+                            if (mounted) {
+                              Navigator.pop(context);
+                            }
                           }
-                        }
-                      : null,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      themeColor,
+                        : null,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        themeColor,
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(),
+                      ),
                     ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      const RoundedRectangleBorder(),
+                    child: Text(
+                      '保存',
+                      style: TextStyle(
+                        color: (bottonState == true)
+                            ? Colors.black
+                            : const Color.fromARGB(255, 174, 167, 167),
+                      ),
                     ),
                   ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: deviceWidth * 0.03),
+                child: const Center(
                   child: Text(
-                    '保存',
+                    '予定の追加',
                     style: TextStyle(
-                      color: (bottonState == true)
-                          ? Colors.black
-                          : const Color.fromARGB(255, 174, 167, 167),
+                      color: Colors.white,
                     ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: deviceWidth * 0.03),
-              child: const Center(
-                child: Text(
-                  '予定の追加',
-                  style: TextStyle(
-                    color: Colors.white,
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  color: Colors.white,
-                  child: GestureDetector(
-                    onTap: () {
-                      primaryFocus?.unfocus();
-                    },
+      body: GestureDetector(
+        onTap: () {
+          primaryFocus?.unfocus();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    color: Colors.white,
                     child: Theme(
                       data: Theme.of(context).copyWith(
                         hintColor: themeColor,
@@ -168,143 +175,145 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: ColoredBox(
-                  color: Colors.white,
-                  child: SwitchListTile(
-                    title: const Text('終日'),
-                    value: allDay,
-                    onChanged: (bool value) {
-                      setState(() {
-                        allDay = value;
-                      });
-                    },
-                    activeColor: Colors.blue,
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: Colors.grey,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 3),
-                child: ColoredBox(
-                  color: Colors.white,
-                  child: ListTile(
-                    title: Row(
-                      children: <Widget>[
-                        const Text('開始'),
-                        const Spacer(),
-                        Text(
-                          allDay
-                              ? DateFormat('yyyy-MM-dd').format(startDate)
-                              : DateFormat('yyyy-MM-dd HH:mm')
-                                  .format(startDate),
-                        ),
-                      ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: ColoredBox(
+                    color: Colors.white,
+                    child: SwitchListTile(
+                      title: const Text('終日'),
+                      value: allDay,
+                      onChanged: (bool value) {
+                        primaryFocus?.unfocus();
+                        setState(() {
+                          allDay = value;
+                        });
+                      },
+                      activeColor: Colors.blue,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey,
                     ),
-                    onTap: () {
-                      if (allDay) {
-                        //開始 終日の場合 年月日にみ選択
-                        showCupertinoModalPopup<void>(
-                          context: context,
-                          builder: (_) => CustomCupertinoDatePicker(
-                            onDateTimeChanged: (DateTime date) {
-                              setState(() {
-                                startDate = date;
-                                if (endDate.isBefore(date)) {
-                                  endDate = date.add(const Duration(hours: 1));
-                                }
-                              });
-                            },
-                          ),
-                        );
-                      } else {
-                        //開始 月日時分
-                        showCupertinoModalPopup<void>(
-                          context: context,
-                          builder: (_) => CustomCupertinoDateTimePicker(
-                            initialDateTime: startDate,
-                            onDateTimeChanged: (DateTime date) {
-                              setState(() {
-                                startDate = date;
-                                if (endDate.isBefore(date) ||
-                                    endDate.isAtSameMomentAs(date)) {
-                                  endDate = date.add(const Duration(hours: 1));
-                                }
-                              });
-                            },
-                          ),
-                        );
-                      }
-                    },
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 3),
-                child: ColoredBox(
-                  color: Colors.white,
-                  child: ListTile(
-                    title: Row(
-                      children: <Widget>[
-                        const Text('終了'),
-                        const Spacer(),
-                        Text(
-                          allDay
-                              ? DateFormat('yyyy-MM-dd').format(endDate)
-                              : DateFormat('yyyy-MM-dd HH:mm').format(endDate),
-                        ),
-                      ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: ColoredBox(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Row(
+                        children: <Widget>[
+                          const Text('開始'),
+                          const Spacer(),
+                          Text(
+                            allDay
+                                ? DateFormat('yyyy-MM-dd').format(startDate)
+                                : DateFormat('yyyy-MM-dd HH:mm')
+                                    .format(startDate),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        primaryFocus?.unfocus();
+                        if (allDay) {
+                          //開始 終日の場合 年月日にみ選択
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (_) => CustomCupertinoDatePicker(
+                              onDateTimeChanged: (DateTime date) {
+                                setState(() {
+                                  startDate = date;
+                                  if (endDate.isBefore(date)) {
+                                    endDate = 
+                                      date.add(const Duration(hours: 1));
+                                  }
+                                });
+                              },
+                            ),
+                          );
+                        } else {
+                          //開始 月日時分
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (_) => CustomCupertinoDateTimePicker(
+                              initialDateTime: startDate,
+                              onDateTimeChanged: (DateTime date) {
+                                setState(() {
+                                  startDate = date;
+                                  if (endDate.isBefore(date) ||
+                                      endDate.isAtSameMomentAs(date)) {
+                                    endDate = 
+                                      date.add(const Duration(hours: 1));
+                                  }
+                                });
+                              },
+                            ),
+                          );
+                        }
+                      },
                     ),
-                    onTap: () {
-                      if (allDay) {
-                        //終了 終日の場合 年月日のみ選択
-                        showCupertinoModalPopup<void>(
-                          context: context,
-                          builder: (_) => CustomCupertinoDatePicker(
-                            onDateTimeChanged: (DateTime date) {
-                              setState(() {
-                                if (startDate.isAfter(date)) {
-                                  endDate = startDate;
-                                } else {
-                                  endDate = date;
-                                }
-                              });
-                            },
-                          ),
-                        );
-                      } else {
-                        //終了 月日時分
-                        showCupertinoModalPopup<void>(
-                          context: context,
-                          builder: (_) => CustomCupertinoDateTimePicker(
-                            minimumDateTime:
-                                startDate.add(const Duration(hours: 1)),
-                            initialDateTime: endDate,
-                            onDateTimeChanged: (DateTime date) {
-                              setState(() {
-                                if (date.isBefore(startDate)) {
-                                  endDate =
-                                      startDate.add(const Duration(hours: 1));
-                                } else {
-                                  endDate = date;
-                                }
-                              });
-                            },
-                          ),
-                        );
-                      }
-                    },
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  primaryFocus?.unfocus();
-                },
-                child: Padding(
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: ColoredBox(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Row(
+                        children: <Widget>[
+                          const Text('終了'),
+                          const Spacer(),
+                          Text(
+                            allDay
+                                ? DateFormat('yyyy-MM-dd')
+                                .format(endDate)
+                                : DateFormat('yyyy-MM-dd HH:mm')
+                                .format(endDate),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        primaryFocus?.unfocus();
+                        if (allDay) {
+                          //終了 終日の場合 年月日のみ選択
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (_) => CustomCupertinoDatePicker(
+                              onDateTimeChanged: (DateTime date) {
+                                setState(() {
+                                  if (startDate.isAfter(date)) {
+                                    endDate = startDate;
+                                  } else {
+                                    endDate = date;
+                                  }
+                                });
+                              },
+                            ),
+                          );
+                        } else {
+                          //終了 月日時分
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (_) => CustomCupertinoDateTimePicker(
+                              minimumDateTime:
+                                  startDate.add(const Duration(hours: 1)),
+                              initialDateTime: endDate,
+                              onDateTimeChanged: (DateTime date) {
+                                setState(() {
+                                  if (date.isBefore(startDate)) {
+                                    endDate =
+                                        startDate.add(const Duration(hours: 1));
+                                  } else {
+                                    endDate = date;
+                                  }
+                                });
+                              },
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Container(
                     color: Colors.white,
@@ -313,38 +322,33 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                       left: 10,
                       right: 10,
                     ),
-                    child: GestureDetector(
-                      onTap: () {
-                        primaryFocus?.unfocus();
-                      },
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          hintColor: themeColor,
-                        ),
-                        child: TextField(
-                          controller: bottonStateNotifier.contentController,
-                          decoration: const InputDecoration(
-                            hintText: 'コメントを入力してください',
-                            border: InputBorder.none,
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        hintColor: themeColor,
+                      ),
+                      child: TextField(
+                        controller: bottonStateNotifier.contentController,
+                        decoration: const InputDecoration(
+                          hintText: 'コメントを入力してください',
+                          border: InputBorder.none,
+                          labelStyle: TextStyle(
+                            color: Colors.grey,
                           ),
-                          maxLines: null,
-                          onChanged: (text) {
-                            if (text.isEmpty) {
-                              bottonStateNotifier.updateState();
-                            }
-                          },
-                          onSubmitted: (_) => bottonStateNotifier.updateState(),
-                          textInputAction: TextInputAction.done,
                         ),
+                        maxLines: null,
+                        onChanged: (text) {
+                          if (text.isEmpty) {
+                            bottonStateNotifier.updateState();
+                          }
+                        },
+                        onSubmitted: (_) => bottonStateNotifier.updateState(),
+                        textInputAction: TextInputAction.done,
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
