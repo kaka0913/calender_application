@@ -59,9 +59,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         title: GestureDetector(
-                  onTap: () {
-                    primaryFocus?.unfocus();
-                  },         
+          onTap: () {
+            primaryFocus?.unfocus();
+          },
           child: Stack(
             children: [
               Row(
@@ -69,9 +69,8 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                   GestureDetector(
                     onTap: () {
                       if (bottonStateNotifier.titleController.text.isNotEmpty ||
-                          bottonStateNotifier.contentController
-                            .text.isNotEmpty) 
-                        {
+                          bottonStateNotifier
+                              .contentController.text.isNotEmpty) {
                         showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
@@ -222,8 +221,8 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                                 setState(() {
                                   startDate = date;
                                   if (endDate.isBefore(date)) {
-                                    endDate = 
-                                      date.add(const Duration(hours: 1));
+                                    endDate =
+                                        date.add(const Duration(hours: 1));
                                   }
                                 });
                               },
@@ -240,8 +239,8 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
                                       endDate.isAtSameMomentAs(date)) {
-                                    endDate = 
-                                      date.add(const Duration(hours: 1));
+                                    endDate =
+                                        date.add(const Duration(hours: 1));
                                   }
                                 });
                               },
@@ -263,10 +262,9 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                           const Spacer(),
                           Text(
                             allDay
-                                ? DateFormat('yyyy-MM-dd')
-                                .format(endDate)
+                                ? DateFormat('yyyy-MM-dd').format(endDate)
                                 : DateFormat('yyyy-MM-dd HH:mm')
-                                .format(endDate),
+                                    .format(endDate),
                           ),
                         ],
                       ),

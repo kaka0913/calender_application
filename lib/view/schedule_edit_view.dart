@@ -53,8 +53,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         title: GestureDetector(
-          onTap: (){
-             primaryFocus?.unfocus();
+          onTap: () {
+            primaryFocus?.unfocus();
           },
           child: Stack(
             children: [
@@ -221,8 +221,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                 setState(() {
                                   startDate = date;
                                   if (endDate.isBefore(date)) {
-                                    endDate = 
-                                      date.add(const Duration(hours: 1));
+                                    endDate =
+                                        date.add(const Duration(hours: 1));
                                   }
                                 });
                               },
@@ -240,8 +240,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
                                       endDate.isAtSameMomentAs(date)) {
-                                    endDate = 
-                                      date.add(const Duration(hours: 1));
+                                    endDate =
+                                        date.add(const Duration(hours: 1));
                                   }
                                 });
                               },
@@ -263,10 +263,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           const Spacer(),
                           Text(
                             allDay
-                                ? DateFormat('yyyy-MM-dd')
-                                .format(endDate)
+                                ? DateFormat('yyyy-MM-dd').format(endDate)
                                 : DateFormat('yyyy-MM-dd HH:mm')
-                                .format(endDate),
+                                    .format(endDate),
                           ),
                         ],
                       ),
@@ -345,8 +344,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         },
                         onFieldSubmitted: (text) {
                           bottonStateNotifier.contentController.text = text;
-                          if (widget.schedule.content != text ||
-                              text.isEmpty) {
+                          if (widget.schedule.content != text || text.isEmpty) {
                             bottonStateNotifier.updateState();
                           }
                         },
