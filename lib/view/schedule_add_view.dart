@@ -61,6 +61,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         title: GestureDetector(
           onTap: () {
             primaryFocus?.unfocus();
+            bottonStateNotifier.updateState();
           },
           child: Stack(
             children: [
@@ -76,6 +77,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
                         );
+                        primaryFocus?.unfocus();
                       } else {
                         Navigator.pop(context);
                       }
@@ -142,6 +144,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
       body: GestureDetector(
         onTap: () {
           primaryFocus?.unfocus();
+          bottonStateNotifier.updateState();
         },
         child: Padding(
           padding: const EdgeInsets.all(10),

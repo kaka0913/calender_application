@@ -55,6 +55,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
         title: GestureDetector(
           onTap: () {
             primaryFocus?.unfocus();
+            bottonStateNotifier.updateState();
           },
           child: Stack(
             children: [
@@ -62,13 +63,17 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      if (bottonState) {
-                        //変更されている場合を示すことができるので流用
+                      //ボタンの状態が変化しているのは内容に変更があった場合、加えて空白の場合も考慮
+                      if (bottonState || 
+                          bottonStateNotifier.titleController.text.isEmpty ||
+                          bottonStateNotifier.contentController.text.isEmpty
+                          ) {
                         showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
                         );
+                        primaryFocus?.unfocus();
                       } else {
                         Navigator.pop(context);
                       }
@@ -136,6 +141,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
       body: GestureDetector(
         onTap: () {
           primaryFocus?.unfocus();
+          bottonStateNotifier.updateState();
         },
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -396,6 +402,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                         .deleteSchedule(widget.schedule.id);
                                     ref.invalidate(driftDbProvider);
                                     if (mounted) {
+                                      primaryFocus?.unfocus();
                                       Navigator.of(context).pop(); // ダイアログ
                                       Navigator.of(context).pop(); // 予定詳細画面
                                     }
