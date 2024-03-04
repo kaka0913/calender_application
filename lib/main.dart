@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         Locale('ja', 'JP'),
       ],
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: Colors.blue,
       ),
       home: const HomePage(),
