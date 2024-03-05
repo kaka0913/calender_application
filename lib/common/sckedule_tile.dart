@@ -23,7 +23,8 @@ class ScheduleTile extends StatelessWidget {
           ),
         );
       },
-      child: Padding(
+      child: Container(
+        color: Colors.white,
         padding: const EdgeInsets.only(left: 8, right: 8),
         child: Column(
           children: [

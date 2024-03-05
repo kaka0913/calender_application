@@ -38,38 +38,14 @@ class DateBox extends ConsumerWidget {
     final deviceWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      //DateBoxを押した際の挙動
       onTap: () {
         selectedDateNotifier.updateDate(date!).then((updatedDate) {
           showDialog<void>(
             context: context,
             builder: (BuildContext context) {
-              return GestureDetector(
-                //PageViewの欄外への挙動を検知
-                onTap: () => Navigator.of(context).pop(),
-                child: PageView.builder(
-                  controller: PageController(
-                    viewportFraction: 0.9,
-                    initialPage: 50,
-                  ),
-                  itemCount: 101,
-                  itemBuilder: (BuildContext context, int index) {
-                    final selectedDate =
-                        updatedDate.add(Duration(days: index - 50));
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white,
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 100,
-                      ),
-                      child: ScheduleCarousel(selectedDate: selectedDate),
-                    );
-                  },
-                ),
-              );
+              return CustomPageView(
+                deviceWidth: deviceWidth, 
+                updatedDate: updatedDate,);
             },
           );
         });
