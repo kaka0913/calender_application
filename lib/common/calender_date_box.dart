@@ -43,33 +43,9 @@ class DateBox extends ConsumerWidget {
           showDialog<void>(
             context: context,
             builder: (BuildContext context) {
-              return Container(
-                margin: EdgeInsets.only(
-                  top: deviceWidth * 0.43,
-                  bottom: deviceWidth * 0.04,
-                ),
-                child: PageView.builder(
-                  controller: PageController(
-                    viewportFraction: 0.9,
-                    initialPage: 50,
-                  ),
-                  itemCount: 101,
-                  itemBuilder: (BuildContext context, int index) {
-                    final selectedDate =
-                        updatedDate.add(Duration(days: index - 50));
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white,
-                      ),
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      child: ScheduleCarousel(selectedDate: selectedDate),
-                    );
-                  },
-                ),
-              );
+              return CustomPageView(
+                deviceWidth: deviceWidth, 
+                updatedDate: updatedDate,);
             },
           );
         });
