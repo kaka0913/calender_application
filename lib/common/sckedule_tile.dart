@@ -38,7 +38,7 @@ class ScheduleTile extends StatelessWidget {
                         Center(
                           child: Text(
                             '終日',
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                       ],
@@ -48,20 +48,21 @@ class ScheduleTile extends StatelessWidget {
                   SizedBox(
                     width: 40,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           '${schedule.startTime.hour.toString()
                           .padLeft(2,'0')}:${
                             schedule.startTime.minute.toString()
                             .padLeft(2,'0')}',
-                          style: const TextStyle(fontSize: 10),
+                          style: const TextStyle(fontSize: 12),
                         ),
                         Text(
                           '${schedule.endTime.hour.toString()
                           .padLeft(2, '0')}:${
                             schedule.endTime.minute.toString()
                             .padLeft(2, '0')}',
-                          style: const TextStyle(fontSize: 10),
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -95,16 +96,16 @@ class ScheduleTile extends StatelessWidget {
                         final endPosition = tp.getPositionForOffset(
                             Offset(constraints.maxWidth, 0),);
                         final trimmedText =
-                            schedule.title.substring(0, endPosition.offset - 1);
+                            schedule.title.substring(0, endPosition.offset - 3);
                         return Text(
                           '$trimmedText...',
-                          style: const TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 18),
                           maxLines: 1,
                         );
                       } else {
                         return Text(
                           schedule.title,
-                          style: const TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 18),
                           maxLines: 1,
                         );
                       }
