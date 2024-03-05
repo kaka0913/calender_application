@@ -17,6 +17,7 @@ class CustomCupertinoActionSheet extends StatelessWidget {
             ),
           ),
           onPressed: () {
+            primaryFocus?.unfocus();
             Navigator.pop(context);
             Navigator.pop(context);
           },

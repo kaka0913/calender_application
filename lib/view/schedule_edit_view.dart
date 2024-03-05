@@ -53,7 +53,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         title: GestureDetector(
-          onTap: () {
+          onTap: () {//画面をタップしてキーボードを閉じる
             primaryFocus?.unfocus();
           },
           child: Stack(
@@ -72,8 +72,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
                         );
+                      } else {//変更なしのまま閉じる場合
                         primaryFocus?.unfocus();
-                      } else {
                         Navigator.pop(context);
                       }
                     },

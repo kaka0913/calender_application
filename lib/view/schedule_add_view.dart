@@ -59,7 +59,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         title: GestureDetector(
-          onTap: () {
+          onTap: () {//画面をタップしてキーボードを閉じる
             primaryFocus?.unfocus();
             bottonStateNotifier.updateState();
           },
@@ -70,15 +70,15 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                   GestureDetector(
                     onTap: () {
                       if (bottonStateNotifier.titleController.text.isNotEmpty ||
-                          bottonStateNotifier
-                              .contentController.text.isNotEmpty) {
+                          bottonStateNotifier.contentController.text.isNotEmpty
+                          ) {
                         showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
                         );
+                      } else {//変更なしのまま閉じる場合
                         primaryFocus?.unfocus();
-                      } else {
                         Navigator.pop(context);
                       }
                     },
