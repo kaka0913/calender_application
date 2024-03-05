@@ -25,8 +25,8 @@ class ScheduleAddForm extends ConsumerStatefulWidget {
 class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
   bool allDay = false;
   DateTime defaultTime = DateTime.now();
-  late DateTime startDate;
-  late DateTime endDate;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   final focusNode = FocusNode();
 
   @override

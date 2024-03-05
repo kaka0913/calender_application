@@ -23,8 +23,8 @@ class ScheduleEditForm extends ConsumerStatefulWidget {
 
 class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
   bool allDay = false;
-  late DateTime startDate;
-  late DateTime endDate;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   final focusNode = FocusNode();
 
   @override
@@ -55,7 +55,6 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
         title: GestureDetector(
           onTap: () {
             primaryFocus?.unfocus();
-            bottonStateNotifier.updateState();
           },
           child: Stack(
             children: [
@@ -141,7 +140,6 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
       body: GestureDetector(
         onTap: () {
           primaryFocus?.unfocus();
-          bottonStateNotifier.updateState();
         },
         child: Padding(
           padding: const EdgeInsets.all(10),
