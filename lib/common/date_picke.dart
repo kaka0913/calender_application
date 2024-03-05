@@ -3,8 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomCupertinoDatePicker extends StatelessWidget {
-  const CustomCupertinoDatePicker({required this.onDateTimeChanged, super.key});
+  const CustomCupertinoDatePicker({
+    required this.onDateTimeChanged, 
+    required this.initialDateTime,
+    this.minimumDateTime,
+    super.key,
+  });
   final ValueChanged<DateTime> onDateTimeChanged;
+  final DateTime initialDateTime;
+  final DateTime? minimumDateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +47,16 @@ class CustomCupertinoDatePicker extends StatelessWidget {
           SizedBox(
             height: 200,
             child: CupertinoDatePicker(
+              initialDateTime: initialDateTime,
               mode: CupertinoDatePickerMode.date,
               onDateTimeChanged: onDateTimeChanged,
+              minimumDate: minimumDateTime != null
+                  ? DateTime(
+                      minimumDateTime!.year,
+                      minimumDateTime!.month,
+                      minimumDateTime!.day,
+                    )
+                  : null,
             ),
           ),
         ],

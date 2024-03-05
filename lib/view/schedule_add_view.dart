@@ -220,6 +220,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                           showCupertinoModalPopup<void>(
                             context: context,
                             builder: (_) => CustomCupertinoDatePicker(
+                              initialDateTime: startDate,
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
@@ -278,6 +279,8 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                           showCupertinoModalPopup<void>(
                             context: context,
                             builder: (_) => CustomCupertinoDatePicker(
+                              initialDateTime: endDate,
+                              minimumDateTime: startDate,
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   if (startDate.isAfter(date)) {
