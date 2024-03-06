@@ -44,7 +44,7 @@ class CalendarController extends ConsumerWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: Colors.grey,
+                              color: const Color.fromARGB(255, 222, 220, 220),
                             ),
                           ),
                           child: const Center(
