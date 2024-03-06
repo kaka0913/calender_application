@@ -71,6 +71,7 @@ class ScheduleCarousel extends ConsumerWidget {
         top: MediaQuery.of(context).size.height * 0.03,
         left: MediaQuery.of(context).size.width * 0.03,
         right: MediaQuery.of(context).size.width * 0.03,
+        bottom: MediaQuery.of(context).size.height * 0.01,
       ),
       child: Column(
         children: [
