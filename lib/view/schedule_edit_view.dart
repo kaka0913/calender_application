@@ -108,7 +108,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         themeColor,
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(),
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
                       ),
                     ),
                     child: Text(
@@ -324,9 +326,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Container(
+                    height: deviceWidth * 0.4,
                     color: Colors.white,
                     padding: const EdgeInsets.only(
-                      bottom: 80,
                       left: 10,
                       right: 10,
                     ),
