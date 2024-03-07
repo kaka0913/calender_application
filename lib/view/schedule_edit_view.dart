@@ -232,9 +232,15 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  if (endDate.isBefore(date)) {
-                                    endDate =
-                                        date.add(const Duration(hours: 1));
+                                  if (endDate.isBefore(date) || //編集時は1時間後に設定しない
+                                      endDate.difference(date).inDays >= 1) {
+                                    endDate = DateTime(
+                                        date.year, 
+                                        date.month, 
+                                        date.day, 
+                                        date.hour, 
+                                        date.minute,).
+                                        add(const Duration(hours: 1));
                                   }
                                 });
                                 bottonStateNotifier.updateState();
@@ -252,8 +258,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
                                       endDate.isAtSameMomentAs(date)) {
-                                    endDate =
-                                        date.add(const Duration(hours: 1));
+                                        endDate =
+                                            date.add(const Duration(hours: 1));
                                   }
                                 });
                                 bottonStateNotifier.updateState();
@@ -289,7 +295,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           showCupertinoModalPopup<void>(
                             context: context,
                             builder: (_) => CustomCupertinoDatePicker(
-                              initialDateTime: endDate,
+                              initialDateTime: startDate,
                               minimumDateTime: startDate,
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
@@ -308,8 +314,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           showCupertinoModalPopup<void>(
                             context: context,
                             builder: (_) => CustomCupertinoDateTimePicker(
-                              minimumDateTime:
-                                  startDate.add(const Duration(hours: 1)),
+                              minimumDateTime: endDate,
                               initialDateTime: endDate,
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {

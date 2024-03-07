@@ -49,16 +49,12 @@ class CustomCupertinoDateTimePicker extends StatelessWidget {
             child: CupertinoDatePicker(
               use24hFormat: true,
               minuteInterval: 15,
-              initialDateTime: initialDateTime,
+              initialDateTime: minimumDateTime != null 
+              && initialDateTime.isBefore(minimumDateTime!)
+              ? minimumDateTime
+              : initialDateTime,
               onDateTimeChanged: onDateTimeChanged,
-              minimumDate: minimumDateTime != null
-                  ? DateTime(
-                      minimumDateTime!.year,
-                      minimumDateTime!.month,
-                      minimumDateTime!.day,
-                      minimumDateTime!.hour,
-                    )
-                  : null,
+              minimumDate: minimumDateTime,
             ),
           ),
         ],
