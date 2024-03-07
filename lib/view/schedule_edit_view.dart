@@ -62,10 +62,15 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      //ボタンの状態が変化しているのは内容に変更があった場合、加えて空白の場合も考慮
-                      if (bottonState || 
+                      if (bottonStateNotifier.titleController.text 
+                            != widget.schedule.title ||
+                          bottonStateNotifier.contentController.text 
+                            != widget.schedule.content ||
                           bottonStateNotifier.titleController.text.isEmpty ||
-                          bottonStateNotifier.contentController.text.isEmpty
+                          bottonStateNotifier.contentController.text.isEmpty ||
+                          allDay != widget.schedule.isAllDay ||
+                          startDate != widget.schedule.startTime ||
+                          endDate != widget.schedule.endTime 
                           ) {
                         showCupertinoModalPopup<void>(
                           context: context,
@@ -232,6 +237,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                         date.add(const Duration(hours: 1));
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );
@@ -242,7 +248,6 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             builder: (_) => CustomCupertinoDateTimePicker(
                               initialDateTime: startDate,
                               onDateTimeChanged: (DateTime date) {
-                                bottonStateNotifier.updateState();
                                 setState(() {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
@@ -251,6 +256,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                         date.add(const Duration(hours: 1));
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );
@@ -286,7 +292,6 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               initialDateTime: endDate,
                               minimumDateTime: startDate,
                               onDateTimeChanged: (DateTime date) {
-                                bottonStateNotifier.updateState();
                                 setState(() {
                                   if (startDate.isAfter(date)) {
                                     endDate = startDate;
@@ -294,6 +299,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                     endDate = date;
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );
@@ -306,7 +312,6 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                   startDate.add(const Duration(hours: 1)),
                               initialDateTime: endDate,
                               onDateTimeChanged: (DateTime date) {
-                                bottonStateNotifier.updateState();
                                 setState(() {
                                   if (date.isBefore(startDate)) {
                                     endDate =
@@ -315,6 +320,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                     endDate = date;
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );

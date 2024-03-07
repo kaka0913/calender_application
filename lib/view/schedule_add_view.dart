@@ -70,8 +70,22 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                   GestureDetector(
                     onTap: () {
                       if (bottonStateNotifier.titleController.text.isNotEmpty ||
-                          bottonStateNotifier.contentController.text.isNotEmpty
-                          ) {
+                          bottonStateNotifier.contentController
+                            .text.isNotEmpty ||
+                          allDay == true || //終日スイッチがオンの場合
+                          startDate != DateTime( //開始ピッカーが最初と異なるか
+                            widget.selectedDate.year,
+                            widget.selectedDate.month,
+                            widget.selectedDate.day,
+                            defaultTime.add(const Duration(hours: 1)).hour,
+                          ) ||
+                          endDate != DateTime( //終了ピッカーが最初と異なるか
+                            widget.selectedDate.year,
+                            widget.selectedDate.month,
+                            widget.selectedDate.day,
+                            defaultTime.add(const Duration(hours: 2)).hour,
+                          )
+                        ) {
                         showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
