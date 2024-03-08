@@ -82,8 +82,8 @@ class SckeduleDatabase extends _$SckeduleDatabase {
     final queryRows = await (select(schedules)
           ..where(
             (t) =>
-                t.startTime.isBiggerOrEqualValue(startOfDay) &
-                t.startTime.isSmallerOrEqualValue(endOfDay),
+                (t.startTime.isSmallerOrEqualValue(endOfDay) & 
+                t.endTime.isBiggerOrEqualValue(startOfDay)),
           ))
         .get();
     return queryRows.isNotEmpty;

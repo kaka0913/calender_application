@@ -25,8 +25,13 @@ class Calendar extends HookConsumerWidget {
 
     return Column(
       children: [
-        ColoredBox(
-          color: Colors.white,
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 0.1),
+            ),
+            color: Colors.white,
+          ),
           child: Container(
             color: Colors.grey[200],
             height: 20,

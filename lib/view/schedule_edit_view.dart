@@ -62,10 +62,15 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      //ボタンの状態が変化しているのは内容に変更があった場合、加えて空白の場合も考慮
-                      if (bottonState || 
+                      if (bottonStateNotifier.titleController.text 
+                            != widget.schedule.title ||
+                          bottonStateNotifier.contentController.text 
+                            != widget.schedule.content ||
                           bottonStateNotifier.titleController.text.isEmpty ||
-                          bottonStateNotifier.contentController.text.isEmpty
+                          bottonStateNotifier.contentController.text.isEmpty ||
+                          allDay != widget.schedule.isAllDay ||
+                          startDate != widget.schedule.startTime ||
+                          endDate != widget.schedule.endTime 
                           ) {
                         showCupertinoModalPopup<void>(
                           context: context,
@@ -108,7 +113,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                         themeColor,
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(),
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
                       ),
                     ),
                     child: Text(
@@ -225,11 +232,18 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  if (endDate.isBefore(date)) {
-                                    endDate =
-                                        date.add(const Duration(hours: 1));
+                                  if (endDate.isBefore(date) || //編集時は1時間後に設定しない
+                                      endDate.difference(date).inDays >= 1) {
+                                    endDate = DateTime(
+                                        date.year, 
+                                        date.month, 
+                                        date.day, 
+                                        date.hour, 
+                                        date.minute,).
+                                        add(const Duration(hours: 1));
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );
@@ -240,15 +254,15 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                             builder: (_) => CustomCupertinoDateTimePicker(
                               initialDateTime: startDate,
                               onDateTimeChanged: (DateTime date) {
-                                bottonStateNotifier.updateState();
                                 setState(() {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
                                       endDate.isAtSameMomentAs(date)) {
-                                    endDate =
-                                        date.add(const Duration(hours: 1));
+                                        endDate =
+                                            date.add(const Duration(hours: 1));
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );
@@ -281,10 +295,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           showCupertinoModalPopup<void>(
                             context: context,
                             builder: (_) => CustomCupertinoDatePicker(
-                              initialDateTime: endDate,
+                              initialDateTime: startDate,
                               minimumDateTime: startDate,
                               onDateTimeChanged: (DateTime date) {
-                                bottonStateNotifier.updateState();
                                 setState(() {
                                   if (startDate.isAfter(date)) {
                                     endDate = startDate;
@@ -292,6 +305,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                     endDate = date;
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );
@@ -300,11 +314,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           showCupertinoModalPopup<void>(
                             context: context,
                             builder: (_) => CustomCupertinoDateTimePicker(
-                              minimumDateTime:
-                                  startDate.add(const Duration(hours: 1)),
+                              minimumDateTime: endDate,
                               initialDateTime: endDate,
                               onDateTimeChanged: (DateTime date) {
-                                bottonStateNotifier.updateState();
                                 setState(() {
                                   if (date.isBefore(startDate)) {
                                     endDate =
@@ -313,6 +325,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                     endDate = date;
                                   }
                                 });
+                                bottonStateNotifier.updateState();
                               },
                             ),
                           );
@@ -324,9 +337,9 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Container(
+                    height: deviceWidth * 0.4,
                     color: Colors.white,
                     padding: const EdgeInsets.only(
-                      bottom: 80,
                       left: 10,
                       right: 10,
                     ),

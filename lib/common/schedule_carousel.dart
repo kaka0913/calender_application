@@ -71,14 +71,34 @@ class ScheduleCarousel extends ConsumerWidget {
         top: MediaQuery.of(context).size.height * 0.03,
         left: MediaQuery.of(context).size.width * 0.03,
         right: MediaQuery.of(context).size.width * 0.03,
+        bottom: MediaQuery.of(context).size.height * 0.01,
       ),
       child: Column(
         children: [
           Row(
             children: [
-              Text(
-                DateFormat('yyyy/MM/dd （E）', 'ja_JP').format(selectedDate),
-                style: const TextStyle(fontSize: 18),
+              Row(
+                children: [
+                  Text(
+                    DateFormat('yyyy/MM/dd （', 'ja_JP').format(selectedDate),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    DateFormat('E', 'ja_JP').format(selectedDate),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: selectedDate.weekday == DateTime.saturday
+                        ? Colors.blue
+                        : selectedDate.weekday == DateTime.sunday
+                          ? Colors.red
+                          : Colors.black,
+                    ),
+                  ),
+                  const Text(
+                    '）',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
               ),
               const Spacer(),
               ElevatedButton(
