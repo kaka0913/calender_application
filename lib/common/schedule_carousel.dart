@@ -2,22 +2,23 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 // Project imports:
 import 'package:calender_application/common/sckedule_tile.dart';
 import 'package:calender_application/repository/drift_repository.dart';
+import 'package:calender_application/repository/provider/page_change_provider.dart';
 import 'package:calender_application/view/schedule_add_view.dart';
 
 class CustomPageView extends StatelessWidget {
-
   const CustomPageView({
-    required this.deviceWidth, 
-    required this.updatedDate, 
+    required this.deviceWidth,
+    required this.updatedDate,
     super.key,
-    });
+  });
 
   final double deviceWidth;
   final DateTime updatedDate;
@@ -53,7 +54,7 @@ class CustomPageView extends StatelessWidget {
   }
 }
 
-class ScheduleCarousel extends ConsumerWidget {
+class ScheduleCarousel extends HookConsumerWidget {
   const ScheduleCarousel({
     required this.selectedDate,
     super.key,
@@ -65,6 +66,16 @@ class ScheduleCarousel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final repository = ref.watch(driftDbProvider);
     initializeDateFormatting('ja_JP');
+    final page = ref.watch(pageChangeProvider);
+    var sckeduleList = repository.getSchedules(selectedDate);
+
+    useEffect(
+      () {
+        sckeduleList = repository.getSchedules(selectedDate);
+        return null;
+      },
+      [page],
+    );
 
     return Container(
       padding: EdgeInsets.only(
@@ -88,10 +99,10 @@ class ScheduleCarousel extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 18,
                       color: selectedDate.weekday == DateTime.saturday
-                        ? Colors.blue
-                        : selectedDate.weekday == DateTime.sunday
-                          ? Colors.red
-                          : Colors.black,
+                          ? Colors.blue
+                          : selectedDate.weekday == DateTime.sunday
+                              ? Colors.red
+                              : Colors.black,
                     ),
                   ),
                   const Text(
@@ -130,7 +141,7 @@ class ScheduleCarousel extends ConsumerWidget {
             endIndent: 1,
           ),
           FutureBuilder<List<Schedule>>(
-            future: repository.getSchedules(selectedDate),
+            future: sckeduleList,
             builder: (
               BuildContext context,
               AsyncSnapshot<List<Schedule>> snapshot,

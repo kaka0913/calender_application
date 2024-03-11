@@ -81,8 +81,7 @@ class SckeduleDatabase extends _$SckeduleDatabase {
     final endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
     final queryRows = await (select(schedules)
           ..where(
-            (t) =>
-                (t.startTime.isSmallerOrEqualValue(endOfDay) & 
+            (t) => (t.startTime.isSmallerOrEqualValue(endOfDay) &
                 t.endTime.isBiggerOrEqualValue(startOfDay)),
           ))
         .get();
