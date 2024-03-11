@@ -13,6 +13,7 @@ import 'package:calender_application/common/datetime_picker.dart';
 import 'package:calender_application/model/schedule_form_model.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
+import 'package:calender_application/repository/provider/page_change_provider.dart';
 
 class ScheduleAddForm extends ConsumerStatefulWidget {
   const ScheduleAddForm({required this.selectedDate, super.key});
@@ -52,6 +53,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
     final database = ref.watch(driftDbProvider);
     final deviceWidth = MediaQuery.of(context).size.width;
     const themeColor = Color.fromARGB(255, 216, 216, 216);
+    final pageChangeNotifier = ref.watch(pageChangeProvider.notifier);
 
     return Scaffold(
       backgroundColor: themeColor,
@@ -59,7 +61,8 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         title: GestureDetector(
-          onTap: () {//画面をタップしてキーボードを閉じる
+          onTap: () {
+            //画面をタップしてキーボードを閉じる
             primaryFocus?.unfocus();
             bottonStateNotifier.updateState();
           },
@@ -70,28 +73,32 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                   GestureDetector(
                     onTap: () {
                       if (bottonStateNotifier.titleController.text.isNotEmpty ||
-                          bottonStateNotifier.contentController
-                            .text.isNotEmpty ||
+                          bottonStateNotifier
+                              .contentController.text.isNotEmpty ||
                           allDay == true || //終日スイッチがオンの場合
-                          startDate != DateTime( //開始ピッカーが最初と異なるか
-                            widget.selectedDate.year,
-                            widget.selectedDate.month,
-                            widget.selectedDate.day,
-                            defaultTime.add(const Duration(hours: 1)).hour,
-                          ) ||
-                          endDate != DateTime( //終了ピッカーが最初と異なるか
-                            widget.selectedDate.year,
-                            widget.selectedDate.month,
-                            widget.selectedDate.day,
-                            defaultTime.add(const Duration(hours: 2)).hour,
-                          )
-                        ) {
+                          startDate !=
+                              DateTime(
+                                //開始ピッカーが最初と異なるか
+                                widget.selectedDate.year,
+                                widget.selectedDate.month,
+                                widget.selectedDate.day,
+                                defaultTime.add(const Duration(hours: 1)).hour,
+                              ) ||
+                          endDate !=
+                              DateTime(
+                                //終了ピッカーが最初と異なるか
+                                widget.selectedDate.year,
+                                widget.selectedDate.month,
+                                widget.selectedDate.day,
+                                defaultTime.add(const Duration(hours: 2)).hour,
+                              )) {
                         showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
                         );
-                      } else {//変更なしのまま閉じる場合
+                      } else {
+                        //変更なしのまま閉じる場合
                         primaryFocus?.unfocus();
                         Navigator.pop(context);
                       }
@@ -115,7 +122,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                                     bottonStateNotifier.contentController.text,
                               ),
                             );
-                            ref.invalidate(driftDbProvider);
+                            pageChangeNotifier.notifyChange();
                             if (mounted) {
                               Navigator.pop(context);
                             }
@@ -240,15 +247,15 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  if (endDate.isBefore(date) || 
+                                  if (endDate.isBefore(date) ||
                                       endDate.difference(date).inDays >= 1) {
                                     endDate = DateTime(
-                                        date.year, 
-                                        date.month, 
-                                        date.day, 
-                                        date.hour, 
-                                        date.minute,).
-                                        add(const Duration(hours: 1));
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      date.hour,
+                                      date.minute,
+                                    ).add(const Duration(hours: 1));
                                   }
                                 });
                               },
@@ -263,8 +270,8 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  endDate =   //常に1時間後に設定
-                                    date.add(const Duration(hours: 1));
+                                  endDate = //常に1時間後に設定
+                                      date.add(const Duration(hours: 1));
                                 });
                               },
                             ),

@@ -12,6 +12,7 @@ import 'package:calender_application/common/date_picke.dart';
 import 'package:calender_application/common/datetime_picker.dart';
 import 'package:calender_application/repository/drift_repository.dart';
 import 'package:calender_application/repository/provider/buttun_state_provider.dart';
+import 'package:calender_application/repository/provider/page_change_provider.dart';
 
 class ScheduleEditForm extends ConsumerStatefulWidget {
   const ScheduleEditForm({required this.schedule, super.key});
@@ -46,6 +47,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
         ref.watch(editingButtonStateProvider(widget.schedule).notifier);
     final deviceWidth = MediaQuery.of(context).size.width;
     const themeColor = Color.fromARGB(255, 216, 216, 216);
+    final pageChangeNotifier = ref.watch(pageChangeProvider.notifier);
 
     return Scaffold(
       backgroundColor: themeColor,
@@ -53,7 +55,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         title: GestureDetector(
-          onTap: () {//画面をタップしてキーボードを閉じる
+          onTap: () {
+            //画面をタップしてキーボードを閉じる
             primaryFocus?.unfocus();
           },
           child: Stack(
@@ -62,22 +65,22 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      if (bottonStateNotifier.titleController.text 
-                            != widget.schedule.title ||
-                          bottonStateNotifier.contentController.text 
-                            != widget.schedule.content ||
+                      if (bottonStateNotifier.titleController.text !=
+                              widget.schedule.title ||
+                          bottonStateNotifier.contentController.text !=
+                              widget.schedule.content ||
                           bottonStateNotifier.titleController.text.isEmpty ||
                           bottonStateNotifier.contentController.text.isEmpty ||
                           allDay != widget.schedule.isAllDay ||
                           startDate != widget.schedule.startTime ||
-                          endDate != widget.schedule.endTime 
-                          ) {
+                          endDate != widget.schedule.endTime) {
                         showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
                         );
-                      } else {//変更なしのまま閉じる場合
+                      } else {
+                        //変更なしのまま閉じる場合
                         primaryFocus?.unfocus();
                         Navigator.pop(context);
                       }
@@ -102,7 +105,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                     bottonStateNotifier.contentController.text,
                               ),
                             );
-                            ref.invalidate(driftDbProvider);
+                            pageChangeNotifier.notifyChange();
                             if (mounted) {
                               Navigator.pop(context);
                             }
@@ -235,12 +238,12 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                   if (endDate.isBefore(date) || //編集時は1時間後に設定しない
                                       endDate.difference(date).inDays >= 1) {
                                     endDate = DateTime(
-                                        date.year, 
-                                        date.month, 
-                                        date.day, 
-                                        date.hour, 
-                                        date.minute,).
-                                        add(const Duration(hours: 1));
+                                      date.year,
+                                      date.month,
+                                      date.day,
+                                      date.hour,
+                                      date.minute,
+                                    ).add(const Duration(hours: 1));
                                   }
                                 });
                                 bottonStateNotifier.updateState();
@@ -258,8 +261,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
                                       endDate.isAtSameMomentAs(date)) {
-                                        endDate =
-                                            date.add(const Duration(hours: 1));
+                                    endDate =
+                                        date.add(const Duration(hours: 1));
                                   }
                                 });
                                 bottonStateNotifier.updateState();
@@ -414,7 +417,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                                   onPressed: () async {
                                     await database
                                         .deleteSchedule(widget.schedule.id);
-                                    ref.invalidate(driftDbProvider);
+                                    pageChangeNotifier.notifyChange();
                                     if (mounted) {
                                       primaryFocus?.unfocus();
                                       Navigator.of(context).pop(); // ダイアログ

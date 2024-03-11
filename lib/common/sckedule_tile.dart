@@ -1,6 +1,8 @@
+// Dart imports:
+import 'dart:io';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 // Project imports:
 import 'package:calender_application/repository/drift_repository.dart';
@@ -82,8 +84,10 @@ class ScheduleTile extends StatelessWidget {
                   width: deviceWidth * 0.52,
                   child: Platform.isIOS
                       ? LayoutBuilder(
-                          builder: (BuildContext context, 
-                                    BoxConstraints constraints,) {
+                          builder: (
+                            BuildContext context,
+                            BoxConstraints constraints,
+                          ) {
                             final span = TextSpan(
                               text: schedule.title,
                               style: const TextStyle(fontSize: 15),
@@ -98,7 +102,7 @@ class ScheduleTile extends StatelessWidget {
                                 Offset(constraints.maxWidth, 0),
                               );
                               final trimmedText = schedule.title
-                                .substring(0, endPosition.offset - 3);
+                                  .substring(0, endPosition.offset - 3);
                               return Text(
                                 '$trimmedText...',
                                 style: const TextStyle(fontSize: 18),
