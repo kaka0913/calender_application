@@ -13,10 +13,15 @@ import 'package:calender_application/model/schedule_form_model.dart';
 
 part 'drift_repository.g.dart';
 
-final driftDbProvider = Provider<SckeduleDatabase>((ref) {
-  final database = SckeduleDatabase();
-  return database;
-});
+final driftDbProvider = Provider<SckeduleDatabase>(
+  (ref) {
+    final database = SckeduleDatabase();
+    ref.onDispose(() async {
+      await database.close();
+    });
+    return database;
+  },
+);
 
 class Schedules extends Table {
   IntColumn get id => integer().autoIncrement()();
