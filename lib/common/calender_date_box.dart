@@ -52,7 +52,6 @@ class DateBox extends HookConsumerWidget {
             context: context,
             builder: (BuildContext context) {
               return CustomPageView(
-                deviceWidth: deviceWidth,
                 updatedDate: updatedDate,
               );
             },

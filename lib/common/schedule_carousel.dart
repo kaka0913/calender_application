@@ -15,16 +15,16 @@ import 'package:calender_application/view/schedule_add_view.dart';
 
 class CustomPageView extends StatelessWidget {
   const CustomPageView({
-    required this.deviceWidth,
     required this.updatedDate,
     super.key,
   });
 
-  final double deviceWidth;
   final DateTime updatedDate;
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+
     return Container(
       margin: EdgeInsets.only(
         top: deviceWidth * 0.43,

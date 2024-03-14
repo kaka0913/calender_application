@@ -71,7 +71,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (bottonStateNotifier.titleController.text.isNotEmpty ||
                           bottonStateNotifier
                               .contentController.text.isNotEmpty ||
@@ -92,7 +92,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                                 widget.selectedDate.day,
                                 defaultTime.add(const Duration(hours: 2)).hour,
                               )) {
-                        showCupertinoModalPopup<void>(
+                        await showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
@@ -100,7 +100,11 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                       } else {
                         //変更なしのまま閉じる場合
                         primaryFocus?.unfocus();
-                        Navigator.pop(context);
+                        await Future<void>.delayed(
+                            const Duration(milliseconds: 350),);
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
                       }
                     },
                     child: const Icon(
