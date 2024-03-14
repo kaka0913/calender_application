@@ -248,7 +248,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                                 setState(() {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
-                                      endDate.difference(date).inDays >= 1) {
+                                      endDate.isAtSameMomentAs(date)) {
                                     endDate = DateTime(
                                       date.year,
                                       date.month,

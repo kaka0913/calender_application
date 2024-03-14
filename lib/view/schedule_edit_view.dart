@@ -235,8 +235,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  if (endDate.isBefore(date) || //編集時は1時間後に設定しない
-                                      endDate.difference(date).inDays >= 1) {
+                                  if (endDate.isBefore(date) || 
+                                      endDate.isAtSameMomentAs(date)) {
                                     endDate = DateTime(
                                       date.year,
                                       date.month,
