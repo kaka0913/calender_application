@@ -71,7 +71,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (bottonStateNotifier.titleController.text.isNotEmpty ||
                           bottonStateNotifier
                               .contentController.text.isNotEmpty ||
@@ -92,7 +92,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                                 widget.selectedDate.day,
                                 defaultTime.add(const Duration(hours: 2)).hour,
                               )) {
-                        showCupertinoModalPopup<void>(
+                        await showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
@@ -100,7 +100,11 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                       } else {
                         //変更なしのまま閉じる場合
                         primaryFocus?.unfocus();
-                        Navigator.pop(context);
+                        await Future<void>.delayed(
+                            const Duration(milliseconds: 350),);
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
                       }
                     },
                     child: const Icon(
@@ -248,7 +252,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                                 setState(() {
                                   startDate = date;
                                   if (endDate.isBefore(date) ||
-                                      endDate.difference(date).inDays >= 1) {
+                                      endDate.isAtSameMomentAs(date)) {
                                     endDate = DateTime(
                                       date.year,
                                       date.month,
@@ -270,8 +274,11 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  endDate = //常に1時間後に設定
-                                      date.add(const Duration(hours: 1));
+                                  if (endDate.isBefore(date) ||
+                                      endDate.isAtSameMomentAs(date)) {
+                                    endDate =
+                                        date.add(const Duration(hours: 1));
+                                  }
                                 });
                               },
                             ),
@@ -345,7 +352,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                 Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Container(
-                    height: deviceWidth * 0.4,
+                    height: deviceWidth * 0.35,
                     color: Colors.white,
                     padding: const EdgeInsets.only(
                       left: 10,
@@ -371,6 +378,7 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                         },
                         onSubmitted: (_) => bottonStateNotifier.updateState(),
                         textInputAction: TextInputAction.done,
+                        maxLines: null,
                       ),
                     ),
                   ),

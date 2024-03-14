@@ -64,7 +64,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (bottonStateNotifier.titleController.text !=
                               widget.schedule.title ||
                           bottonStateNotifier.contentController.text !=
@@ -74,7 +74,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                           allDay != widget.schedule.isAllDay ||
                           startDate != widget.schedule.startTime ||
                           endDate != widget.schedule.endTime) {
-                        showCupertinoModalPopup<void>(
+                        await showCupertinoModalPopup<void>(
                           context: context,
                           builder: (BuildContext context) =>
                               const CustomCupertinoActionSheet(),
@@ -82,7 +82,11 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                       } else {
                         //変更なしのまま閉じる場合
                         primaryFocus?.unfocus();
-                        Navigator.pop(context);
+                        await Future<void>.delayed(
+                            const Duration(milliseconds: 350),);
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
                       }
                     },
                     child: const Icon(
@@ -235,8 +239,8 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  if (endDate.isBefore(date) || //編集時は1時間後に設定しない
-                                      endDate.difference(date).inDays >= 1) {
+                                  if (endDate.isBefore(date) || 
+                                      endDate.isAtSameMomentAs(date)) {
                                     endDate = DateTime(
                                       date.year,
                                       date.month,
@@ -340,7 +344,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Container(
-                    height: deviceWidth * 0.4,
+                    height: deviceWidth * 0.35,
                     color: Colors.white,
                     padding: const EdgeInsets.only(
                       left: 10,

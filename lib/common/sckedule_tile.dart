@@ -92,10 +92,14 @@ class ScheduleTile extends StatelessWidget {
                               text: schedule.title,
                               style: const TextStyle(fontSize: 15),
                             );
+                            final isHalfWidth = RegExp(r'^[\x20-\x7E]*$').hasMatch(schedule.title);
                             final tp = TextPainter(
                               text: span,
                               textDirection: TextDirection.ltr,
                               maxLines: 1,
+                              textScaler: isHalfWidth ? 
+                                const TextScaler.linear(1.13) :  
+                                TextScaler.noScaling,
                             )..layout(maxWidth: constraints.maxWidth);
                             if (tp.didExceedMaxLines) {
                               final endPosition = tp.getPositionForOffset(
