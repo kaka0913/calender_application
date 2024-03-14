@@ -270,8 +270,11 @@ class ScheduleFormState extends ConsumerState<ScheduleAddForm> {
                               onDateTimeChanged: (DateTime date) {
                                 setState(() {
                                   startDate = date;
-                                  endDate = //常に1時間後に設定
-                                      date.add(const Duration(hours: 1));
+                                  if (endDate.isBefore(date) ||
+                                      endDate.isAtSameMomentAs(date)) {
+                                    endDate =
+                                        date.add(const Duration(hours: 1));
+                                  }
                                 });
                               },
                             ),
