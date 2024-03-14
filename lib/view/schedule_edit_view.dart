@@ -340,7 +340,7 @@ class ScheduleFormState extends ConsumerState<ScheduleEditForm> {
                 Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 10),
                   child: Container(
-                    height: deviceWidth * 0.4,
+                    height: deviceWidth * 0.35,
                     color: Colors.white,
                     padding: const EdgeInsets.only(
                       left: 10,
